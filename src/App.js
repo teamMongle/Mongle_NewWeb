@@ -1,7 +1,12 @@
-import "./App.css";
+import React from "react";
+import GlobalStyle from "./styles/GlobalStyle";
 
-function App() {
-  return <div className="App">ㅁㄴㅇㄹ</div>;
-}
+const App = () => {
+  return (
+    <>
+      <GlobalStyle />
+    </>
+  );
+};
 
 export default App;
