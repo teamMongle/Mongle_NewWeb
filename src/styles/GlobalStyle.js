@@ -5,7 +5,7 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Pretendard', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    background-color: #ffffff;
     line-height: 1.5;
   }
 
