@@ -15,7 +15,7 @@ const AppRoutes = () => {
       <Route path="/posts" element={<PostsPage />} />
       <Route path="/mypage" element={<MyPage />} />
       <Route path="/login" element={<LoginPage />} /> */}
-      {/* <Route path="*" element={<NotFoundPage />} /> 404 페이지 */}
+      {/* <Route path="*" element={<NotFoundPage />} /> */}
     </Routes>
   );
 };
