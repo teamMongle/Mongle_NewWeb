@@ -13,6 +13,10 @@ const Thumbnail = styled.img`
   width: 100%;
   height: 248px;
   object-fit: cover;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const Tag = styled.span`
@@ -26,11 +30,19 @@ const Title = styled.h3`
   font-size: 16px;
   font-weight: bold;
   margin: 4px 0 0 0;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 const Author = styled.p`
   font-size: 14px;
   color: #9ca3af;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 const NovelCard = ({ image, title, author, isFree }) => {
