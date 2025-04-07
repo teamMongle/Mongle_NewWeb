@@ -29,36 +29,34 @@ const Title = styled.h3`
   margin: 0 0 16px 0;
 `;
 
-const GenreFilter = ({ title }) => {
+const GenreFilter = ({ title, onSelect }) => {
   const genres =
     title === "연령별 BEST 9"
       ? ["10대", "20대", "30대", "40대"]
       : ["로맨스", "액션", "SF", "판타지", "공포", "문학"];
 
-  const defaultSelected = genres[0]; // 리스트의 첫 번째 요소를 기본 선택값으로 (장르-로맨스, 연령-10대)
+  const defaultSelected = genres[0];
   const [selectedGenre, setSelectedGenre] = useState(defaultSelected);
 
   const handleGenreClick = (genre) => {
-    setSelectedGenre(genre === selectedGenre ? null : genre);
+    const newGenre = genre === selectedGenre ? null : genre;
+    setSelectedGenre(newGenre);
+    onSelect?.(newGenre);
   };
 
   return (
     <div>
       <Title>{title}</Title>
       <GenreList>
-        {genres.length > 0 ? (
-          genres.map((genre, index) => (
-            <GenreItem
-              key={index}
-              isSelected={genre === selectedGenre}
-              onClick={() => handleGenreClick(genre)}
-            >
-              {genre}
-            </GenreItem>
-          ))
-        ) : (
-          <p>장르가 없습니다.</p>
-        )}
+        {genres.map((genre, index) => (
+          <GenreItem
+            key={index}
+            isSelected={genre === selectedGenre}
+            onClick={() => handleGenreClick(genre)}
+          >
+            {genre}
+          </GenreItem>
+        ))}
       </GenreList>
     </div>
   );
