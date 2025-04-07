@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import image1 from "../../assets/images/firstImg.png";
-import image2 from "../../assets/images/secondImg.png";
-import image3 from "../../assets/images/thirdImg.png";
+import image1 from "../../assets/images/bannerImg1.svg";
+import image2 from "../../assets/images/bannerImg2.svg";
+import image3 from "../../assets/images/bannerImg3.svg";
 
 const Card = styled.div`
   position: relative;
