@@ -26,8 +26,8 @@ const ListContainer = styled.div`
 const NovelList = ({ novels }) => {
   return (
     <ListContainer>
-      {novels.map((novel, index) => (
-        <NovelCard key={index} {...novel} />
+      {novels.map((novel) => (
+        <NovelCard key={novel.id} {...novel} />
       ))}
     </ListContainer>
   );

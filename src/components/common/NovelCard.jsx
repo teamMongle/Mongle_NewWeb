@@ -21,7 +21,7 @@ const Thumbnail = styled.img`
 
 const Tag = styled.span`
   font-size: 12px;
-  color: ${(props) => (props.isFree ? "#5A9" : "#E44")};
+  color: #5a9;
   font-weight: bold;
   margin-top: 6px;
 `;
@@ -45,13 +45,13 @@ const Author = styled.p`
   }
 `;
 
-const NovelCard = ({ image, title, author, isFree }) => {
+const NovelCard = ({ image, title, author_id }) => {
   return (
     <Card>
       <Thumbnail src={image} alt={title} />
-      <Tag isFree={isFree}>{isFree ? "무료 연재" : "유료 연재"}</Tag>
+      <Tag>무료 연재</Tag>
       <Title>{title}</Title>
-      <Author>{author}</Author>
+      <Author>{`작가 #${author_id}`}</Author>
     </Card>
   );
 };
