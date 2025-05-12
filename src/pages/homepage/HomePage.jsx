@@ -62,9 +62,17 @@ const HomePage = () => {
         ) : (
           <>
             <BestList title="이번주 BEST 7" bestItems={weeklyBestItems} />
-            <GenreFilter title="장르별 BEST 7" onSelect={setSelectedGenre} />
+            <GenreFilter
+              title="장르별 BEST 7"
+              selected={selectedGenre}
+              onChange={setSelectedGenre}
+            />
             <NovelList novels={filteredNovels} />
-            <GenreFilter title="연령별 BEST 9" onSelect={setSelectedAge} />
+            <GenreFilter
+              title="연령별 BEST 7"
+              selected={selectedAge}
+              onChange={setSelectedAge}
+            />
             <BestList bestItems={paddedBestItems} />
           </>
         )}

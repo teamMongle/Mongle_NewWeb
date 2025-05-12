@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const ListContainer = styled.div`
   padding: 24px 0;
@@ -10,6 +11,11 @@ const List = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
+`;
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: inherit;
 `;
 
 const ListItem = styled.div`
@@ -63,13 +69,18 @@ const BestList = ({ title, bestItems = [] }) => {
       )}
       <List>
         {bestItems.map((item, index) => (
-          <ListItem key={`${item.title}-${item.author}-${index}`}>
-            <Number>{index + 1}</Number>
-            <ItemContent>
-              <ItemTitle>{item.title}</ItemTitle>
-              <ItemAuthor>{item.author}</ItemAuthor>
-            </ItemContent>
-          </ListItem>
+          <StyledLink
+            key={`${item.title}-${item.author}-${index}`}
+            to={`/story/${item.id}`}
+          >
+            <ListItem>
+              <Number>{index + 1}</Number>
+              <ItemContent>
+                <ItemTitle>{item.title}</ItemTitle>
+                <ItemAuthor>{item.author}</ItemAuthor>
+              </ItemContent>
+            </ListItem>
+          </StyledLink>
         ))}
       </List>
     </ListContainer>

@@ -60,3 +60,17 @@ export const AuthButton = styled.button`
     color: #333;
   }
 `;
+
+export const BackButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+`;
+
+export const BackIcon = styled.img`
+  width: 20px;
+  height: 20px;
+`;
