@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 import NovelCard from "./NovelCard";
 
 const ListContainer = styled.div`
@@ -23,11 +24,19 @@ const ListContainer = styled.div`
   }
 `;
 
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: inherit;
+  flex-shrink: 0;
+`;
+
 const NovelList = ({ novels }) => {
   return (
     <ListContainer>
       {novels.map((novel) => (
-        <NovelCard key={novel.id} {...novel} />
+        <StyledLink key={novel.id} to={`/story/${novel.id}`}>
+          <NovelCard {...novel} />
+        </StyledLink>
       ))}
     </ListContainer>
   );
