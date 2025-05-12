@@ -1,5 +1,5 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import * as M from "./HeaderStyle";
 
 const Header = ({ isLoggedIn, onLoginClick }) => {
@@ -13,7 +13,9 @@ const Header = ({ isLoggedIn, onLoginClick }) => {
   return (
     <M.HeaderContainer>
       <M.HeaderContent>
-        <M.Logo />
+        <Link to="/">
+          <M.Logo />
+        </Link>
 
         <M.Navigation>
           <M.NavLink href="/" style={getActiveLinkStyle("/")}>
