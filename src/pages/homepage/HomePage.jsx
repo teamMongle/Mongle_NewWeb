@@ -27,8 +27,22 @@ const HomePage = () => {
         console.log("베스트 목록 API 연결 성공!");
         console.log(bestItemsResponse.data);
 
-        setNovels(novelsResponse.data);
-        setBestItems(bestItemsResponse.data);
+        const novelsData = novelsResponse.data;
+        const bestItemsData = bestItemsResponse.data;
+
+        const bestItemsWithAuthor = bestItemsData.map((item) => {
+          const matchedNovel = novelsData.find(
+            (novel) => novel.author_id === item.author_id
+          );
+          return {
+            ...item,
+            author_name:
+              matchedNovel?.author_name ?? item.author ?? "작가 미상",
+          };
+        });
+
+        setNovels(novelsData);
+        setBestItems(bestItemsWithAuthor);
         setLoading(false);
       } catch (error) {
         console.error("API 호출 오류", error);

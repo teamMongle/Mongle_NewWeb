@@ -77,7 +77,9 @@ const BestList = ({ title, bestItems = [] }) => {
               <Number>{index + 1}</Number>
               <ItemContent>
                 <ItemTitle>{item.title}</ItemTitle>
-                <ItemAuthor>{item.author}</ItemAuthor>
+                <ItemAuthor>
+                  {item.author_name ?? item.author ?? "작가 미상"}
+                </ItemAuthor>
               </ItemContent>
             </ListItem>
           </StyledLink>

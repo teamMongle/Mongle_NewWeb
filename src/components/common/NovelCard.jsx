@@ -45,13 +45,13 @@ const Author = styled.p`
   }
 `;
 
-const NovelCard = ({ image, title, author_id }) => {
+const NovelCard = ({ image, title, author_name }) => {
   return (
     <Card>
       <Thumbnail src={image} alt={title} />
       <Tag>무료 연재</Tag>
       <Title>{title}</Title>
-      <Author>{`작가 #${author_id}`}</Author>
+      <Author>{author_name ?? "작가 미상"}</Author>
     </Card>
   );
 };
