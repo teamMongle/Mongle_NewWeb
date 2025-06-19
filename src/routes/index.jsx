@@ -48,7 +48,7 @@ const AppRoutes = () => {
       {/* <Route path="*" element={<NotFoundPage />} /> */}
       <Route path="/posts" element={<PostsPage isLoggedIn={isLoggedIn} />} />
       <Route path="/mypage" element={<MyPage isLoggedIn={isLoggedIn} />} />
-      <Route path="/mypage/myworks" element={<MyWorksPage isLoggedIn={isLoggedIn} />} />
+      {/* <Route path="/mypage/myworks" element={<MyWorksPage isLoggedIn={isLoggedIn} />} /> */}
     </Routes>
   );
 };
