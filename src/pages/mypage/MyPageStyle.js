@@ -12,24 +12,12 @@ export const RecentViewsSection = styled.div`
 
 `;
 
-export const Sidebar = styled.div`
-	width: 256px;
-	left: 0;
-	height: 948px;
-	border: none;
-	// border: 1px solid #DDD;
-	position: fixed;
-	justify-content: center;
-	// align-items: center;
-	font-size: 18px;
-`;
-
 export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: calc(100% - 270px);
-	margin-left: 270px;
-	margin-top: 50px;
+  margin-left: 270px;
+  // margin-top: 50px;
   padding: 20px;
   max-width: 1068px;
 `;
@@ -44,7 +32,7 @@ export const ProfileContainer = styled.div`
   // border: 1px solid #ddd;
   // border-radius: 10px;
 
-	margin-top: 100px;
+	margin-top: 140px;
 	margin-left: 150px;
 	max-width: 800px;
 	width: 85%;

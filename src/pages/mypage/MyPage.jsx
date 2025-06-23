@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import * as M from "./MyPageStyle";
 import ProfileIcon from "../../assets/images/mongleProfileIcon.png"
+import SideBar from "../../components/sidebar/SideBar.jsx";
 
 const MyPage = ({ isLoggedIn }) => {
 	const [profile, setProfile] = useState(ProfileIcon);
@@ -15,16 +16,16 @@ const MyPage = ({ isLoggedIn }) => {
 	const navigate = useNavigate();
 	const location = useLocation();
 
-	const getActiveLinkStyle = (path) => {
-		return location.pathname === path
-			? { fontWeight: "bold", color: "#121212" }
-			: { color: "#999" };
-	};
+	// const getActiveLinkStyle = (path) => {
+	// 	return location.pathname === path
+	// 		? { fontWeight: "bold", color: "#121212" }
+	// 		: { color: "#999" };
+	// };
 
 	const onClickLogout = () => {
 		navigate("/");
 		alert("로그아웃 되었습니다.");
-	}
+	};
 
 	useEffect(() => {
 		const token = localStorage.getItem("token");
@@ -48,50 +49,10 @@ const MyPage = ({ isLoggedIn }) => {
 	return (
 		<>
 			<Header isLoggedIn={isLoggedIn} onLoginClick={() => navigate("/")} />
-			<M.Sidebar>
-				<div
-					style={{
-						borderBottom: "1px solid #F3F3F3",
-						marginTop: "150px",
-						marginLeft: "100px",
-						padding: "20px",
-						cursor: "pointer",
-						...getActiveLinkStyle("/mypage"),
-					}}
-				>
-					프로필</div>
-				<div
-					style={{
-						marginLeft: "100px",
-						padding: "20px",
-						cursor: "pointer",
-						...getActiveLinkStyle("/mypage/myworks"),
-					}}
-				>
-					내 작품 목록
-				</div>
-				<div
-					style={{
-						marginLeft: "100px",
-						padding: "20px",
-						cursor: "pointer",
-						...getActiveLinkStyle("/mypage/likedworks"),
-					}}
-				>
-					좋아요 목록
-				</div>
-				<div 
-					style={{ 
-						marginLeft: "100px", 
-						padding: "20px",
-						cursor: "pointer",
-						...getActiveLinkStyle("/"),
-					}}
-					onClick={() => { onClickLogout() }}
-				>
-					로그아웃
-				</div>
-			</M.Sidebar>
+			<SideBar 
+				// getActiveLinkStyle={getActiveLinkStyle} 
+				onClickLogout={onClickLogout} 
+			/>
 			<M.Wrapper>
 				<M.ProfileContainer>
 					<div style={{ display: "flex", alignItems: "center", gap: "20px", padding: "20px", position: "relative" }}>

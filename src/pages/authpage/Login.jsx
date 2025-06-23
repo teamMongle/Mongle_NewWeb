@@ -61,9 +61,6 @@ export default function Login({ setIsLoggedIn }) {
       return;
     }
 
-    const validUsername = "asdf123";
-    const validPassword = "asdf1234!";
-
     // if (loginData.username === validUsername && loginData.password === validPassword) {
     //   alert("로그인 성공!");
     // } else {

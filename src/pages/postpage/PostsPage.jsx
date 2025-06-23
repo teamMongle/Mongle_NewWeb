@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Header from "../../components/layout/header/Header";
 import GenreFilter from "../../components/common/GenreFilter";
@@ -7,7 +7,6 @@ import Box from "../../components/box/Box";
 import * as M from "./PostsPageStyle"
 import styled from "styled-components";
 import PhotoAdd from "../../assets/images/AddPhoto.svg";
-import { useRef } from "react";
 import Default_cover from "../../assets/images/default-cover.png"
 
 const InputBox = styled(Box)`
@@ -16,11 +15,12 @@ const InputBox = styled(Box)`
     align-items: ${({ isFirst }) => isFirst ? 'center' : 'flex-start'};
     justify-content: ${({ isFirst }) => isFirst ? 'space-between' : 'flex-start'};
     padding: 5px;
-`
-
+`;
 
 const PostsPage = ({ isLoggedIn, initData }) => {
   const navigate = useNavigate();
+  const { postId } = useParams();
+
   const [state, setState] = useState({
     title: "",
     content: "",
@@ -31,6 +31,41 @@ const PostsPage = ({ isLoggedIn, initData }) => {
   });
   const [previewImage, setPreviewImage] = useState(Default_cover);
   const inputRef = useRef(null);
+  const [step, setStep] = useState(1);
+
+  useEffect(() => {
+    const fetchPostData = async () => {
+      try {
+        if (!postId) return;
+
+        const token = localStorage.getItem("token");
+        const postIdFromUrl = window.location.pathname.split('/').pop(); // 현재 url에서 postId 추출
+        const res = await axios.get(`http://3.36.64.165:5000/notes/${postIdFromUrl}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = res.data;
+        setState({
+          title: data.title,
+          content: data.content,
+          category: data.category,
+          image: data.image,
+          description: data.description,
+          author_name: state.author_name, // 이미 따로 불러오니 유지
+        });
+        setPreviewImage(data.image || Default_cover); // 불러온 이미지로 preview 세팅
+      } catch (err) {
+        console.error("글 데이터 불러오기 실패:", err);
+      }
+    };
+
+    // '수정' 모드일 때만 GET 실행 (주소 끝에 id가 붙어있을 때)
+    if (window.location.pathname.includes("/posts/")) {
+      fetchPostData();
+    }
+  }, []);
+
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
@@ -47,13 +82,13 @@ const PostsPage = ({ isLoggedIn, initData }) => {
     setPreviewImage(localPreviewUrl);
 
     const formData = new FormData();
-    formData.append("image", file); // 서버에서 요구하는 key 'image'
+    formData.append("image", file);
 
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post("http://3.36.64.165:5000/upload", formData, {
         headers: {
-          "Authorization": `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -127,18 +162,34 @@ const PostsPage = ({ isLoggedIn, initData }) => {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.post("http://3.36.64.165:5000/notes", state, {
-        headers: {
-          "Authorization": `Bearer ${token}`,
-        },
-      });
-      alert("작품이 등록되었습니다!");
-      navigate("/main");
+      const postIdFromUrl = window.location.pathname.split('/').pop(); // URL에서 postId 추출
+      const isEditMode = window.location.pathname.includes("/posts/"); // 수정인지 여부 확인
+
+      let response;
+      if (isEditMode) {
+        // 수정 모드
+        response = await axios.put(`http://3.36.64.165:5000/notes/${postIdFromUrl}`, state, {
+          headers: {
+            "Authorization": `Bearer ${token}`,
+          },
+        });
+        alert("작품이 수정되었습니다!");
+        navigate("/mypage/myworks");
+      } else {
+        // 새 글 작성 모드
+        response = await axios.post("http://3.36.64.165:5000/notes", state, {
+          headers: {
+            "Authorization": `Bearer ${token}`,
+          },
+        });
+        alert("작품이 등록되었습니다!");
+        navigate("/main");
+      }
     } catch (error) {
-      console.error(error);
-      alert("등록에 실패했습니다.");
+      console.error("글 등록/수정 실패:", error);
     }
   };
+
   const handleOnGoBack = () => {
     setStep(1);
   };
@@ -153,15 +204,12 @@ const PostsPage = ({ isLoggedIn, initData }) => {
       alert("작품 소개를 입력해 주세요.");
       return;
     }
-    if (!previewImage || previewImage === Default_cover) {
+    if (!state.image || state.image === Default_cover) {
       alert("메인 표지 이미지를 등록해 주세요.");
       return;
     }
     setStep(2);
   };
-
-  const [step, setStep] = useState(1);
-
 
   console.log("state:", state);
 
@@ -177,91 +225,90 @@ const PostsPage = ({ isLoggedIn, initData }) => {
       <M.Wrapper>
         <Header isLoggedIn={isLoggedIn} />
         {step === 1 ? (
-          <>
-            <div>
-              <M.InputWrapper>
-                <M.PostHeader>
-                  글 쓰기
-                </M.PostHeader>
-                <InputBox isFirst={true}>
-                  <GenreFilter title={"카테고리 선택"} onSelect={handleGenreSelect} />
-                </InputBox>
-                <InputBox isFirst={false}>
-                  <M.P>작품명</M.P>
-                  <M.TextArea
-                    placeholder="작품명은 40자 이내로 작성해 주세요."
-                    name="title"
-                    value={state.title}
-                    onChange={handleChange}
-                    maxLength={40}
-                  />
-                </InputBox>
-                <InputBox isFirst={false}>
-                  <M.P>작품소개</M.P>
-                  <M.TextArea
-                    placeholder="간단한 작품의 줄거리를 요약해 설명해 주세요!"
-                    name="description"
-                    value={state.description}
-                    onChange={handleChange}
-                  />
-                </InputBox>
-                <InputBox isFirst={false}>
-                  <M.P>메인 표지 이미지</M.P>
-                  <M.ImageWrapper style={{ display: "flex", gap: "20px", alignItems: "flex-start" }}>
-                    <M.CoverPreview>
-                      <img
-                        src={previewImage}
-                        alt="커버 이미지"
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                          borderRadius: "10px",
-                        }}
+          <div>
+            <M.InputWrapper>
+              <M.PostHeader>
+                글 쓰기
+              </M.PostHeader>
+              <InputBox isFirst={true}>
+                <GenreFilter title={"카테고리 선택"} onSelect={handleGenreSelect} />
+              </InputBox>
+              <InputBox isFirst={false}>
+                <M.P>작품명</M.P>
+                <M.TextArea
+                  placeholder="작품명은 40자 이내로 작성해 주세요."
+                  name="title"
+                  value={state.title}
+                  onChange={handleChange}
+                  maxLength={40}
+                />
+              </InputBox>
+              <InputBox isFirst={false}>
+                <M.P>작품소개</M.P>
+                <M.TextArea
+                  placeholder="간단한 작품의 줄거리를 요약해 설명해 주세요!"
+                  name="description"
+                  value={state.description}
+                  onChange={handleChange}
+                />
+              </InputBox>
+              <InputBox isFirst={false}>
+                <M.P>메인 표지 이미지</M.P>
+                <M.ImageWrapper style={{ display: "flex", gap: "20px", alignItems: "flex-start" }}>
+                  <M.CoverPreview>
+                    <img
+                      src={previewImage}
+                      alt="커버 이미지"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        borderRadius: "10px",
+                      }}
+                    />
+                  </M.CoverPreview>
+                  <M.TermsAndConditions>
+                    <M.TermsComment>
+                      *상표권, 저작권, 명예를 침해할 가능성이 있는 이미지는 사용을 자제해 주세요.<br />
+                      *외부 이미지를 사용할 경우, 반드시 작품 소개(줄거리)란에 출처를 명확히 기재해 주세요.<br />
+                      *이용 약관에 따라 이미지 사용으로 인한 법적 책임은 해당 이미지를 게시한 사용자에게 있습니다.<br />
+                      *규정을 위반한 신고가 접수되면, 운영자의 검토 후 기본 이미지로 변경될 수 있습니다.<br />
+                    </M.TermsComment>
+                    <M.AddPhotoButton onClick={(e) => e.stopPropagation()}>
+                      <label htmlFor="file-upload" style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                        <img src={PhotoAdd} alt="사진 추가 아이콘" />
+                        이미지 등록
+                      </label>
+                      <input
+                        id="file-upload"
+                        type="file"
+                        accept="image/*"
+                        style={{ display: "none" }}
+                        ref={inputRef}
+                        onChange={handleFileChange}
                       />
-                    </M.CoverPreview>
-                    <M.TermsAndConditions>
-                      <M.TermsComment>
-                        *상표권, 저작권, 명예를 침해할 가능성이 있는 이미지는 사용을 자제해 주세요.<br />
-                        *외부 이미지를 사용할 경우, 반드시 작품 소개(줄거리)란에 출처를 명확히 기재해 주세요.<br />
-                        *이용 약관에 따라 이미지 사용으로 인한 법적 책임은 해당 이미지를 게시한 사용자에게 있습니다.<br />
-                        *규정을 위반한 신고가 접수되면, 운영자의 검토 후 기본 이미지로 변경될 수 있습니다.<br />
-                      </M.TermsComment>
-                      <M.AddPhotoButton onClick={(e) => e.stopPropagation()}>
-                        <label htmlFor="file-upload" style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-                          <img src={PhotoAdd} alt="사진 추가 아이콘" />
-                          이미지 등록
-                        </label>
-                        <input
-                          id="file-upload"
-                          type="file"
-                          accept="image/*"
-                          style={{ display: "none" }}
-                          ref={inputRef}
-                          onChange={handleFileChange}
-                        />
-                      </M.AddPhotoButton>
-                    </M.TermsAndConditions>
-                  </M.ImageWrapper>
-                  <M.P style={{ color: "#9CA3AF", fontSize: "14px", fontWeight: 400 }}>
-                    *사진 비율 (192 x 264px)
-                  </M.P>
-                </InputBox>
-                <div style={{ width: "70%", position: "relative", margin: "0 auto", display: "flex", top: "100px" }}>
-                  <M.Button
-                    onClick={handleClick}
-                    disabled={
-                      !state.title.trim() ||
-                      !state.description.trim() ||
-                      previewImage === Default_cover
-                    }
-                  >
-                    다음
-                  </M.Button>
-                </div>
-              </M.InputWrapper>
-            </div>
-          </>
+                    </M.AddPhotoButton>
+                  </M.TermsAndConditions>
+                </M.ImageWrapper>
+                <M.P style={{ color: "#9CA3AF", fontSize: "14px", fontWeight: 400 }}>
+                  *사진 비율 (192 x 264px)
+                </M.P>
+              </InputBox>
+              <div style={{ width: "70%", position: "relative", margin: "0 auto", display: "flex" }}>
+                <M.Button
+                  onClick={handleClick}
+                  disabled={
+                    !state.title.trim() ||
+                    !state.description.trim() ||
+                    !state.image ||
+                    state.image === Default_cover
+                  }
+                >
+                  다음
+                </M.Button>
+              </div>
+            </M.InputWrapper>
+          </div>
         ) : (
           <>
             <form>

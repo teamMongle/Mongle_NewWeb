@@ -9,7 +9,8 @@ import SignupPage from "../pages/authpage/Signup";
 import PostsPage from "../pages/postpage/PostsPage";
 import EpisodeDetailPage from "../pages/episode/EpisodeDetailPage.jsx";
 // import NotFoundPage from "../pages/NotFoundPage";
-// import 
+import MyWorksPage from "../pages/myworks/MyWorks.jsx";
+import LikedWorksPage from "../pages/likedworks/LikedWorks.jsx";
 
 const AppRoutes = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -46,9 +47,10 @@ const AppRoutes = () => {
       <Route path="/" element={<LoginPage setIsLoggedIn={handleLogin} />} />
       <Route path="/signup" element={<SignupPage setIsLoggedIn={setIsLoggedIn} />} />
       {/* <Route path="*" element={<NotFoundPage />} /> */}
-      <Route path="/posts" element={<PostsPage isLoggedIn={isLoggedIn} />} />
+      <Route path="/posts/:postId?" element={<PostsPage />} isLoggedIn={isLoggedIn} />
       <Route path="/mypage" element={<MyPage isLoggedIn={isLoggedIn} />} />
-      {/* <Route path="/mypage/myworks" element={<MyWorksPage isLoggedIn={isLoggedIn} />} /> */}
+      <Route path="/mypage/myworks" element={<MyWorksPage isLoggedIn={isLoggedIn} />} />
+      <Route path="/mypage/likedworks" element={<LikedWorksPage isLoggedIn={isLoggedIn} />} />
     </Routes>
   );
 };
