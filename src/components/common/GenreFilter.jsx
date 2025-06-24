@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 const GenreList = styled.ul`
@@ -25,9 +25,9 @@ const GenreItem = styled.li`
 `;
 
 const Title = styled.h3`
-  font-size: 20px;
+  font-size: 18px;
   font-weight: bold;
-  margin: 0 0 16px 0;
+  margin: 0 0 16px 5px;
 `;
 
 const GenreFilter = ({ title = "장르", selected, onChange }) => {

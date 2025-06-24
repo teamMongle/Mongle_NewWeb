@@ -38,7 +38,7 @@ export const NavLink = styled.a`
   text-align: center;
   color: #666;
   text-decoration: none;
-  font-size: 18px;
+  font-size: 16x;
   font-weight: 500;
 
   &:hover {

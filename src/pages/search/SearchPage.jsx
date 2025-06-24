@@ -41,7 +41,7 @@ const DUMMY_DATA = {
   ],
 };
 
-const SearchPage = () => {
+const SearchPage = ({ isLoggedIn }) => {
   const [query, setQuery] = useState("");
   const [selectedTag, setSelectedTag] = useState("로맨스");
   const [results, setResults] = useState(DUMMY_DATA["로맨스"]);
@@ -70,7 +70,7 @@ const SearchPage = () => {
 
   return (
     <>
-      <Header />
+      <Header isLoggedIn={isLoggedIn}/>
       <M.SearchContainer>
         <M.ContentWrapper>
           <M.SearchSection>

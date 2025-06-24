@@ -6,13 +6,15 @@ import FeaturedCard from "../../components/common/FeaturedCard";
 import BestList from "../../components/common/BestList";
 import GenreFilter from "../../components/common/GenreFilter";
 import NovelList from "../../components/common/NovelList";
+import { useNavigate } from "react-router-dom";
 
-const HomePage = () => {
+const HomePage = ({ isLoggedIn }) => {
   const [selectedGenre, setSelectedGenre] = useState("로맨스");
   const [selectedAge, setSelectedAge] = useState("10대");
   const [novels, setNovels] = useState([]);
   const [bestItems, setBestItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -68,7 +70,8 @@ const HomePage = () => {
 
   return (
     <>
-      <Header />
+      {/* <Header /> */}
+      <Header isLoggedIn={isLoggedIn} onLoginClick={() => navigate("/")} />
       <M.HomeContainer>
         <FeaturedCard />
         {loading ? (

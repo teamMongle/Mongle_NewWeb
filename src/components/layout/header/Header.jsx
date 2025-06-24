@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import * as M from "./HeaderStyle";
 
 const Header = ({ isLoggedIn, onLoginClick }) => {
@@ -9,16 +9,18 @@ const Header = ({ isLoggedIn, onLoginClick }) => {
       ? { fontWeight: 700, color: "#121212" }
       : {};
   };
+  
+  const navigate = useNavigate();
 
   return (
     <M.HeaderContainer>
       <M.HeaderContent>
-        <Link to="/">
+        <Link to="/main">
           <M.Logo />
         </Link>
 
         <M.Navigation>
-          <M.NavLink href="/" style={getActiveLinkStyle("/")}>
+          <M.NavLink href="/main" style={getActiveLinkStyle("/main")}>
             추천
           </M.NavLink>
           <M.NavLink href="/search" style={getActiveLinkStyle("/search")}>
@@ -34,7 +36,11 @@ const Header = ({ isLoggedIn, onLoginClick }) => {
             마이페이지
           </M.NavLink>
         ) : (
-          <M.AuthButton onClick={onLoginClick}>로그인</M.AuthButton>
+          <M.AuthButton 
+            // onClick={onLoginClick}
+            onClick={() => navigate("/")}
+            href="/"
+          >로그인</M.AuthButton>
         )}
       </M.HeaderContent>
     </M.HeaderContainer>
