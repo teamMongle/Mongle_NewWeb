@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import * as M from "./StoryDetailPageStyle";
 import NovelList from "../../components/common/NovelList";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import BackHeader from "../../components/layout/header/BackHeader";
 
 const StoryDetailPage = () => {
@@ -115,26 +115,31 @@ const StoryDetailPage = () => {
 
                   return (
                     <M.EpisodeItem key={ep.episodeId}>
-                      <M.EpisodeInfo>
-                        <div
-                          style={{
-                            display: "flex",
-                            gap: "12px",
-                            alignItems: "center",
-                          }}
-                        >
-                          <strong>{`${episodes.length - index}화`}</strong>
-                          <div>
-                            {ep.title || `에피소드 ${ep.episodeNumber}`}
+                      <Link
+                        to={`/notes/${note_id}/episodes/${ep.episodeId}`}
+                        style={{ textDecoration: "none", color: "inherit" }}
+                      >
+                        <M.EpisodeInfo>
+                          <div
+                            style={{
+                              display: "flex",
+                              gap: "12px",
+                              alignItems: "center",
+                            }}
+                          >
+                            <strong>{`${episodes.length - index}화`}</strong>
+                            <div>
+                              {ep.title || `에피소드 ${ep.episodeNumber}`}
+                            </div>
                           </div>
-                        </div>
-                        <M.EpisodeDate>
-                          {new Date(ep.createdAt)
-                            .toISOString()
-                            .slice(0, 10)
-                            .replace(/-/g, ".")}
-                        </M.EpisodeDate>
-                      </M.EpisodeInfo>
+                          <M.EpisodeDate>
+                            {new Date(ep.createdAt)
+                              .toISOString()
+                              .slice(0, 10)
+                              .replace(/-/g, ".")}
+                          </M.EpisodeDate>
+                        </M.EpisodeInfo>
+                      </Link>
                       <M.Like onClick={() => toggleLike(ep.episodeId)}>
                         <M.LikeIcon liked={likeState.liked} />
                         {likeState.likes}

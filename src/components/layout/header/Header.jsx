@@ -9,6 +9,7 @@ const Header = ({ isLoggedIn, onLoginClick }) => {
       ? { fontWeight: 700, color: "#121212" }
       : {};
   };
+  
   const navigate = useNavigate();
 
   return (

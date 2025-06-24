@@ -1,7 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-// import ArrowLeft from "../../../assets/images/backIcon.svg";
-import ArrowLeft from "../../layout/header/Header";
+import ArrowLeft from "../../../assets/images/backIcon.svg";
 import * as M from "./HeaderStyle";
 
 const BackHeader = () => {
