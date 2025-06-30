@@ -6,11 +6,16 @@ import * as M from "./MyWorksStyle";
 import like from "../../assets/images/like.png"
 import view from "../../assets/images/view.png"
 import { useNavigate } from "react-router-dom";
+import Modal from "../../components/common/Modal";
 
 const MyWorksPage = ({ isLoggedIn }) => {
   const [myWorks, setMyWorks] = useState([]);
   const [user, setUser] = useState([]);
   const navigate = useNavigate();
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [isConfirm, setIsConfirm] = useState(false);
+  const [onConfirmCallback, setOnConfirmCallback] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -18,7 +23,7 @@ const MyWorksPage = ({ isLoggedIn }) => {
     const fetchMyWorks = async () => {
       try {
         const response = await axios.get(
-          "http://3.36.64.165:5000/users/me", {
+          "http://3.39.231.73:5000/users/me", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -36,11 +41,33 @@ const MyWorksPage = ({ isLoggedIn }) => {
     fetchMyWorks();
   }, []);
 
+  const showConfirm = (msg, onConfirmCallbackFn) => {
+    setModalMessage(msg);
+    setIsConfirm(true);
+    setModalVisible(true);
+    setOnConfirmCallback(() => onConfirmCallbackFn);
+  };
 
+  const handleConfirm = () => {
+    if (isConfirm && onConfirmCallback) onConfirmCallback();
+    setModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setModalVisible(false);
+  };
 
 
   return (
-    <div>
+    <>
+      {modalVisible && (
+        <Modal
+          message={modalMessage}
+          onConfirm={handleConfirm}
+          onCancel={handleCancel}
+          showCancel={isConfirm}
+        />
+      )}
       <Header isLoggedIn={isLoggedIn} />
       <SideBar style={{ position: "fixed" }} />
       <div style={{ position: "absolute", flexWrap: "wrap", gap: "20px", padding: "20px", marginTop: "100px", marginLeft: "400px" }}>
@@ -51,7 +78,7 @@ const MyWorksPage = ({ isLoggedIn }) => {
                 <div style={{ width: "840px", borderTop: "1px solid #E5E7EB", paddingBottom: "" }} />
               )}
               <M.MYWORKS
-                onClick={() => navigate(`/story/${work.id}`)}
+                // onClick={() => navigate(`/story/${work.id}`)}
                 style={{ cursor: "pointer" }}
               >
                 <img
@@ -70,14 +97,14 @@ const MyWorksPage = ({ isLoggedIn }) => {
                   <p style={{ margin: "0", fontSize: "14px", color: "#9CA3AF" }}>2025.06.23</p>
                   <div style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "60px" }}>
                     <img src={like} style={{ width: "13px", height: "11px" }} alt="like" />{work.likes}
-                    <img src={view} style={{ width: "16px", height: "17px" }} alt="view" />55
+                    <img src={view} style={{ width: "16px", height: "17px" }} alt="view" />0
                   </div>
                 </div>
-                <div 
-                  style={{ 
-                    display: "flex", 
-                    flexDirection: "column", 
-                    gap: "8px", 
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "8px",
                     marginLeft: "auto",
                     marginRight: "40px",
                   }}
@@ -95,7 +122,7 @@ const MyWorksPage = ({ isLoggedIn }) => {
                     }}
                     onClick={() => {
                       const token = localStorage.getItem("token");
-                      axios.get(`http://3.36.64.165:5000/notes/${work.id}`, {
+                      axios.get(`http://3.39.231.73:5000/notes/${work.id}`, {
                         headers: { Authorization: `Bearer ${token}` }
                       }).then(res => {
                         // Assuming posts page can accept initData via navigation state
@@ -120,9 +147,9 @@ const MyWorksPage = ({ isLoggedIn }) => {
                       cursor: "pointer",
                     }}
                     onClick={() => {
-                      if (window.confirm("정말 삭제하시겠습니까?\n작품을 삭제하면 글이 영구적으로 삭제되며 복구할 수 없습니다.")) {
+                      if (showConfirm("정말 삭제하시겠습니까?")) {
                         const token = localStorage.getItem("token");
-                        axios.delete(`http://3.36.64.165:5000/notes/${work.id}`, {
+                        axios.delete(`http://3.39.231.73:5000/notes/${work.id}`, {
                           headers: { Authorization: `Bearer ${token}` }
                         }).then(() => {
                           alert("삭제 성공");
@@ -145,7 +172,7 @@ const MyWorksPage = ({ isLoggedIn }) => {
           <></>
         )}
       </div>
-    </div>
+    </>
   );
 };
 
