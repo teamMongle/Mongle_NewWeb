@@ -67,10 +67,10 @@ export const TabHeader = styled.div`
 export const TabItem = styled.div`
   padding: 12px 16px;
   font-size: 16px;
-  font-weight: ${(props) => (props.active ? "bold" : "normal")};
-  color: ${(props) => (props.active ? "#000" : "#aaa")};
+  font-weight: ${(props) => (props.$active ? "bold" : "normal")};
+  color: ${(props) => (props.$active ? "#000" : "#aaa")};
   cursor: pointer;
-  border-bottom: ${(props) => (props.active ? "2px solid #000" : "none")};
+  border-bottom: ${(props) => (props.$active ? "2px solid #000" : "none")};
 `;
 
 export const EpisodeSection = styled.div``;
@@ -114,7 +114,7 @@ export const Like = styled.div`
 `;
 
 export const LikeIcon = styled.img.attrs((props) => ({
-  src: props.liked ? HeartFilledIcon : HeartIcon,
+  src: props.$liked ? HeartFilledIcon : HeartIcon,
   alt: "하트 아이콘",
 }))`
   width: 16px;
@@ -127,4 +127,29 @@ export const EmptyEpisodeMessage = styled.p`
   font-size: 15px;
   color: #888;
   padding: 12px 0;
+`;
+
+export const EpisodeAddButton = styled.div`
+  width: 126px;
+  height: 34px;
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+  // border: 2px solid #f1f1f1;
+  // border-radius: 12px;
+  background-color: #121212;
+  // cursor: pointer;
+  // // text-align: center;
+  color: #FFFFFF;
+  // font-size: 16px;
+  // line-height: 1;
+  border-radius: 12px;
+
+  &:hover {
+    color: #f1f1f1;
+  }
+  
+  cursor: pointer;
 `;

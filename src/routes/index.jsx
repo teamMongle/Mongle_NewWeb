@@ -11,6 +11,8 @@ import EpisodeDetailPage from "../pages/episode/EpisodeDetailPage.jsx";
 // import NotFoundPage from "../pages/NotFoundPage";
 import MyWorksPage from "../pages/myworks/MyWorks.jsx";
 import LikedWorksPage from "../pages/likedworks/LikedWorks.jsx";
+import DraftPost from "../pages/draftpost/DraftPost.jsx";
+import AddEpisode from "../pages/addepisode/AddEpisode.jsx";
 
 const AppRoutes = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -26,11 +28,6 @@ const AppRoutes = () => {
     setIsLoggedIn(true);
     localStorage.setItem("isLoggedIn", "true");
   }
-  
-  // likedWorks
-  // myWorks
-  // profile
-  // recentViews
 
   const handleLogout = () => {
     setIsLoggedIn(false);
@@ -47,10 +44,12 @@ const AppRoutes = () => {
       <Route path="/" element={<LoginPage setIsLoggedIn={handleLogin} />} />
       <Route path="/signup" element={<SignupPage setIsLoggedIn={setIsLoggedIn} />} />
       {/* <Route path="*" element={<NotFoundPage />} /> */}
-      <Route path="/posts/:postId?" element={<PostsPage />} isLoggedIn={isLoggedIn} />
+      <Route path="/posts/:postId?" element={<PostsPage isLoggedIn={isLoggedIn} />} />
       <Route path="/mypage" element={<MyPage isLoggedIn={isLoggedIn} />} />
       <Route path="/mypage/myworks" element={<MyWorksPage isLoggedIn={isLoggedIn} />} />
-      <Route path="/mypage/likedworks" element={<LikedWorksPage isLoggedIn={isLoggedIn} />} />
+      {/* <Route path="/mypage/likedworks" element={<LikedWorksPage isLoggedIn={isLoggedIn} />} /> */}
+      <Route path="/draft" element={<DraftPost isLoggedIn={isLoggedIn} />} />
+      <Route path="/add-episode/:note_id" element={<AddEpisode isLoggedIn={isLoggedIn} />} />
     </Routes>
   );
 };
