@@ -3,10 +3,11 @@ import styled from "styled-components";
 
 const GenreList = styled.ul`
   list-style-type: none;
-  margin: 0;
-  padding-left: 5px;
+  padding: 0;
   display: flex;
   flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 40px;
 `;
 
 const GenreItem = styled.li`
@@ -34,10 +35,8 @@ const GenreFilter = ({ title, selected, onChange, onSelect }) => {
     title === "연령별 BEST 9"
       ? ["10대", "20대", "30대", "40대"]
       : ["로맨스", "액션", "SF", "판타지", "공포", "문학"];
-        // "추리", "스포츠", "시", "소설", "수필", "무협", "로맨스판타지"
 
   const defaultSelected = genres[0];
-  // const defaultSelected = title === "연령별 BEST 9" ? genres[0] : "로맨스";
   const [selectedGenre, setSelectedGenre] = useState(defaultSelected);
 
   useEffect(() => {
@@ -48,7 +47,10 @@ const GenreFilter = ({ title, selected, onChange, onSelect }) => {
     const newGenre = genre === selectedGenre ? null : genre;
     setSelectedGenre(newGenre);
     onSelect?.(newGenre);
-    onChange?.(newGenre);
+
+    if (genre !== selected) {
+      onChange?.(genre);
+    }
   };
 
   return (

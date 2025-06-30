@@ -1,0 +1,59 @@
+import React from "react";
+import styled from "styled-components";
+
+const Card = styled.div`
+  width: 180px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+`;
+
+const Thumbnail = styled.img`
+  width: 100%;
+  height: 248px;
+  object-fit: cover;
+
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+const Tag = styled.span`
+  font-size: 12px;
+  color: #5a9;
+  font-weight: bold;
+  margin-top: 6px;
+`;
+
+const Title = styled.h3`
+  font-size: 16px;
+  font-weight: bold;
+  margin: 4px 0 0 0;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const Author = styled.p`
+  font-size: 14px;
+  color: #9ca3af;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const NovelCard = ({ image, title, author_name }) => {
+  return (
+    <Card>
+      <Thumbnail src={image} alt={title} />
+      <Tag>무료 연재</Tag>
+      <Title>{title}</Title>
+      <Author>{author_name ?? "작가 미상"}</Author>
+    </Card>
+  );
+};
+
+export default NovelCard;
