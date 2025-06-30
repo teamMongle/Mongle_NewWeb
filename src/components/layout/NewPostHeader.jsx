@@ -30,6 +30,7 @@ export default function NewPostHeader({ title }) {
         <Header >
             {/* 글 쓰기 */}
             {title}
+
         </Header>
     );
 }

@@ -81,34 +81,37 @@ const MyWorksPage = ({ isLoggedIn }) => {
                 // onClick={() => navigate(`/story/${work.id}`)}
                 style={{ cursor: "pointer" }}
               >
-                <img
-                  src={work.image}
-                  alt={work.title}
-                  style={{
-                    width: "100px",
-                    height: "150px",
-                    objectFit: "cover",
-                    marginRight: "10px"
-                  }}
-                />
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <p style={{ margin: "0", color: "#9CA3AF", fontSize: "12px" }}>로맨스</p>
-                  <h3 style={{ margin: "0", fontSize: "16px" }}>{work.title}</h3>
-                  <p style={{ margin: "0", fontSize: "14px", color: "#9CA3AF" }}>2025.06.23</p>
-                  <div style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "60px" }}>
-                    <img src={like} style={{ width: "13px", height: "11px" }} alt="like" />{work.likes}
-                    <img src={view} style={{ width: "16px", height: "17px" }} alt="view" />0
+                <div onClick={() => navigate(`story/${work.id}`)>
+
+                  <img
+                    src={work.image}
+                    alt={work.title}
+                    style={{
+                      width: "100px",
+                      height: "150px",
+                      objectFit: "cover",
+                      marginRight: "10px"
+                    }}
+                  />
+                  <div style={{ display: "flex", flexDirection: "column" }}>
+                    <p style={{ margin: "0", color: "#9CA3AF", fontSize: "12px" }}>로맨스</p>
+                    <h3 style={{ margin: "0", fontSize: "16px" }}>{work.title}</h3>
+                    <p style={{ margin: "0", fontSize: "14px", color: "#9CA3AF" }}>2025.06.23</p>
+                    <div style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "60px" }}>
+                      <img src={like} style={{ width: "13px", height: "11px" }} alt="like" />{work.likes}
+                      <img src={view} style={{ width: "16px", height: "17px" }} alt="view" />0
+                    </div>
                   </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "8px",
+                      marginLeft: "auto",
+                      marginRight: "40px",
+                    }}
+                  >
                 </div>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "8px",
-                    marginLeft: "auto",
-                    marginRight: "40px",
-                  }}
-                >
                   <button
                     style={{
                       width: "92px",
