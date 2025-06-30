@@ -19,12 +19,12 @@ const HomePage = ({ isLoggedIn }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const novelsResponse = await axios.get("http://3.36.64.165:5000/notes");
+        const novelsResponse = await axios.get("http://3.39.231.73:5000/notes");
         console.log("소설 목록 API 연결 성공!");
         console.log(novelsResponse.data);
 
         const bestItemsResponse = await axios.get(
-          "http://3.36.64.165:5000/best9"
+          "http://3.39.231.73:5000/best9"
         );
         console.log("베스트 목록 API 연결 성공!");
         console.log(bestItemsResponse.data);

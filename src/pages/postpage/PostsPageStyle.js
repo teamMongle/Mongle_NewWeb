@@ -3,8 +3,8 @@ import styled from "styled-components";
 export const Button = styled.button`
     display: block;
     align-items: center;
-    position: ${({ isRelative }) => (isRelative ? "relative" : "absolute")};
-    bottom: ${({ isRelative }) => (isRelative ? "20px" : "200px")};
+    position: ${({ $isRelative }) => ($isRelative ? "relative" : "absolute")};
+    bottom: ${({ $isRelative }) => ($isRelative ? "20px" : "200px")};
 
     top: 30px;
     right: 0;

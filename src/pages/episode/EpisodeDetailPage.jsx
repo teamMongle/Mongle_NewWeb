@@ -17,7 +17,7 @@ const EpisodeDetailPage = () => {
       try {
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          `http://3.36.64.165:5000/notes/${note_id}`,
+          `http://3.39.231.73:5000/notes/${note_id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -78,6 +78,8 @@ const EpisodeDetailPage = () => {
               .slice(0, 10)
               .replace(/-/g, ".")}
           </M.Date>
+          {/* <span>&#8942;</span> */}
+          {/* 회차 수정/삭제 api 요청 */}
         </M.MetaSection>
         <M.Content>{episode.content}</M.Content>
         <M.ButtonWrapper>

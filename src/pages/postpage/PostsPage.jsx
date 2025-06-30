@@ -29,9 +29,9 @@ const PostsPage = ({ isLoggedIn, initData }) => {
     description: "",
     author_name: ""
   });
+
   const [previewImage, setPreviewImage] = useState(Default_cover);
   const inputRef = useRef(null);
-  const [step, setStep] = useState(1);
 
   useEffect(() => {
     const fetchPostData = async () => {
@@ -40,7 +40,7 @@ const PostsPage = ({ isLoggedIn, initData }) => {
 
         const token = localStorage.getItem("token");
         const postIdFromUrl = window.location.pathname.split('/').pop(); // 현재 url에서 postId 추출
-        const res = await axios.get(`http://3.36.64.165:5000/notes/${postIdFromUrl}`, {
+        const res = await axios.get(`http://3.39.231.73:5000//notes/${postIdFromUrl}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -86,7 +86,7 @@ const PostsPage = ({ isLoggedIn, initData }) => {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.post("http://3.36.64.165:5000/upload", formData, {
+      const response = await axios.post("http://3.39.231.73:5000/upload", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -97,21 +97,6 @@ const PostsPage = ({ isLoggedIn, initData }) => {
     } catch (error) {
       console.error("이미지 업로드 실패:", error);
     }
-
-    // const formData = new FormData();
-    // formData.append("image", file);
-    // try {
-    //   const token = localStorage.getItem("token");
-    //   const response = await axios.post("http://3.36.64.165:5000/notes", formData, {
-    //     headers: {
-    //       "Authorization": `Bearer ${token}`,
-    //     },
-    //   });
-    //   const uploadedImageUrl = response.data.url;
-    //   setState((prev) => ({ ...prev, image: uploadedImageUrl }));
-    // } catch (error) {
-    //   console.error("이미지 업로드 실패:", error);
-    // }
   };
 
   console.log(state);
@@ -128,7 +113,7 @@ const PostsPage = ({ isLoggedIn, initData }) => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    axios.get("http://3.36.64.165:5000/users/me", {
+    axios.get("http://3.39.231.73:5000/users/me", {
       headers: {
         "Authorization": `Bearer ${token}`,
       },
@@ -154,10 +139,6 @@ const PostsPage = ({ isLoggedIn, initData }) => {
     console.log(state);
   };
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -168,7 +149,7 @@ const PostsPage = ({ isLoggedIn, initData }) => {
       let response;
       if (isEditMode) {
         // 수정 모드
-        response = await axios.put(`http://3.36.64.165:5000/notes/${postIdFromUrl}`, state, {
+        response = await axios.put(`http://3.39.231.73:5000/notes/${postIdFromUrl}`, state, {
           headers: {
             "Authorization": `Bearer ${token}`,
           },
@@ -177,7 +158,7 @@ const PostsPage = ({ isLoggedIn, initData }) => {
         navigate("/mypage/myworks");
       } else {
         // 새 글 작성 모드
-        response = await axios.post("http://3.36.64.165:5000/notes", state, {
+        response = await axios.post("http://3.39.231.73:5000/notes", state, {
           headers: {
             "Authorization": `Bearer ${token}`,
           },
@@ -188,10 +169,6 @@ const PostsPage = ({ isLoggedIn, initData }) => {
     } catch (error) {
       console.error("글 등록/수정 실패:", error);
     }
-  };
-
-  const handleOnGoBack = () => {
-    setStep(1);
   };
 
   const handleClick = (e) => {
@@ -208,7 +185,11 @@ const PostsPage = ({ isLoggedIn, initData }) => {
       alert("메인 표지 이미지를 등록해 주세요.");
       return;
     }
-    setStep(2);
+    // setStep(2);
+    // navigate("/add-episode");
+    // navigate("/story/:note_id"); // 서버에 보내고.. 다시 받아서 id를 추출,, -> 이동
+
+    handleSubmit(e);
   };
 
   console.log("state:", state);
@@ -224,149 +205,90 @@ const PostsPage = ({ isLoggedIn, initData }) => {
     <>
       <M.Wrapper>
         <Header isLoggedIn={isLoggedIn} />
-        {step === 1 ? (
-          <div>
-            <M.InputWrapper>
-              <M.PostHeader>
-                글 쓰기
-              </M.PostHeader>
-              <InputBox isFirst={true}>
-                <GenreFilter title={"카테고리 선택"} onSelect={handleGenreSelect} />
-              </InputBox>
-              <InputBox isFirst={false}>
-                <M.P>작품명</M.P>
-                <M.TextArea
-                  placeholder="작품명은 40자 이내로 작성해 주세요."
-                  name="title"
-                  value={state.title}
-                  onChange={handleChange}
-                  maxLength={40}
-                />
-              </InputBox>
-              <InputBox isFirst={false}>
-                <M.P>작품소개</M.P>
-                <M.TextArea
-                  placeholder="간단한 작품의 줄거리를 요약해 설명해 주세요!"
-                  name="description"
-                  value={state.description}
-                  onChange={handleChange}
-                />
-              </InputBox>
-              <InputBox isFirst={false}>
-                <M.P>메인 표지 이미지</M.P>
-                <M.ImageWrapper style={{ display: "flex", gap: "20px", alignItems: "flex-start" }}>
-                  <M.CoverPreview>
-                    <img
-                      src={previewImage}
-                      alt="커버 이미지"
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                        borderRadius: "10px",
-                      }}
-                    />
-                  </M.CoverPreview>
-                  <M.TermsAndConditions>
-                    <M.TermsComment>
-                      *상표권, 저작권, 명예를 침해할 가능성이 있는 이미지는 사용을 자제해 주세요.<br />
-                      *외부 이미지를 사용할 경우, 반드시 작품 소개(줄거리)란에 출처를 명확히 기재해 주세요.<br />
-                      *이용 약관에 따라 이미지 사용으로 인한 법적 책임은 해당 이미지를 게시한 사용자에게 있습니다.<br />
-                      *규정을 위반한 신고가 접수되면, 운영자의 검토 후 기본 이미지로 변경될 수 있습니다.<br />
-                    </M.TermsComment>
-                    <M.AddPhotoButton onClick={(e) => e.stopPropagation()}>
-                      <label htmlFor="file-upload" style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-                        <img src={PhotoAdd} alt="사진 추가 아이콘" />
-                        이미지 등록
-                      </label>
-                      <input
-                        id="file-upload"
-                        type="file"
-                        accept="image/*"
-                        style={{ display: "none" }}
-                        ref={inputRef}
-                        onChange={handleFileChange}
-                      />
-                    </M.AddPhotoButton>
-                  </M.TermsAndConditions>
-                </M.ImageWrapper>
-                <M.P style={{ color: "#9CA3AF", fontSize: "14px", fontWeight: 400 }}>
-                  *사진 비율 (192 x 264px)
-                </M.P>
-              </InputBox>
-              <div style={{ width: "70%", position: "relative", margin: "0 auto", display: "flex" }}>
-                <M.Button
-                  onClick={handleClick}
-                  disabled={
-                    !state.title.trim() ||
-                    !state.description.trim() ||
-                    !state.image ||
-                    state.image === Default_cover
-                  }
-                >
-                  다음
-                </M.Button>
-              </div>
-            </M.InputWrapper>
-          </div>
-        ) : (
-          <>
-            <form>
-              <M.InputWrapper>
-                <M.PostHeader>
-                  글 쓰기
-                </M.PostHeader>
-                <M.Button
-                  onClick={handleOnGoBack}
-                  style={{ 
-                    top: "245px", 
-                    left: "230px",
-                  }}
-                >
-                  이전
-                </M.Button>
-                <div
-                  style={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    gap: "12px",
-                    marginBottom: "12px",
-                    position: "relative",
-                    top: "110px",
-                    right: "210px",
-                  }}
-                >
-                  <M.TempSaveButton isRelative onClick={() => {
-                    localStorage.setItem("draftPost", JSON.stringify(state));
-                    alert("임시 저장 완료!");
-                  }}>
-                    임시 저장
-                  </M.TempSaveButton>
-                  <M.Button
-                    isRelative
-                    disabled={!state.content.trim()}
-                    onClick={handleSubmit}
-                  // style={{ opacity: state.content.trim() ? 1 : 0.5, cursor: state.content.trim() ? 'pointer' : 'not-allowed' }}
-                  >
-                    게시
-                  </M.Button>
-                </div>
-                <InputBox isFirst={true}>
-                  <M.P>작품 글쓰기</M.P>
-                  <M.TextArea
-                    type="text"
-                    placeholder="이곳에 글을 작성해 주세요."
-                    name="content"
-                    value={state.content}
-                    onChange={handleChange}
-                    style={{ height: "750px", }}
+        <div>
+          <M.InputWrapper>
+            <M.PostHeader>
+              작품 등록
+            </M.PostHeader>
+            <InputBox isFirst={true}>
+              <GenreFilter title={"카테고리 선택"} onSelect={handleGenreSelect} />
+            </InputBox>
+            <InputBox isFirst={false}>
+              <M.P>작품명</M.P>
+              <M.TextArea
+                placeholder="작품명은 40자 이내로 작성해 주세요."
+                name="title"
+                value={state.title}
+                onChange={handleChange}
+                maxLength={40}
+              />
+            </InputBox>
+            <InputBox isFirst={false}>
+              <M.P>작품소개</M.P>
+              <M.TextArea
+                placeholder="간단한 작품의 줄거리를 요약해 설명해 주세요!"
+                name="description"
+                value={state.description}
+                onChange={handleChange}
+              />
+            </InputBox>
+            <InputBox isFirst={false}>
+              <M.P>메인 표지 이미지</M.P>
+              <M.ImageWrapper style={{ display: "flex", gap: "20px", alignItems: "flex-start" }}>
+                <M.CoverPreview>
+                  <img
+                    src={previewImage}
+                    alt="커버 이미지"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      borderRadius: "10px",
+                    }}
                   />
-                </InputBox>
-              </M.InputWrapper>
-            </form>
-          </>
-        )}
+                </M.CoverPreview>
+                <M.TermsAndConditions>
+                  <M.TermsComment>
+                    *상표권, 저작권, 명예를 침해할 가능성이 있는 이미지는 사용을 자제해 주세요.<br />
+                    *외부 이미지를 사용할 경우, 반드시 작품 소개(줄거리)란에 출처를 명확히 기재해 주세요.<br />
+                    *이용 약관에 따라 이미지 사용으로 인한 법적 책임은 해당 이미지를 게시한 사용자에게 있습니다.<br />
+                    *규정을 위반한 신고가 접수되면, 운영자의 검토 후 기본 이미지로 변경될 수 있습니다.<br />
+                  </M.TermsComment>
+                  <M.AddPhotoButton onClick={(e) => e.stopPropagation()}>
+                    <label htmlFor="file-upload" style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                      <img src={PhotoAdd} alt="사진 추가 아이콘" />
+                      이미지 등록
+                    </label>
+                    <input
+                      id="file-upload"
+                      type="file"
+                      accept="image/*"
+                      style={{ display: "none" }}
+                      ref={inputRef}
+                      onChange={handleFileChange}
+                    />
+                  </M.AddPhotoButton>
+                </M.TermsAndConditions>
+              </M.ImageWrapper>
+              <M.P style={{ color: "#9CA3AF", fontSize: "14px", fontWeight: 400 }}>
+                *사진 비율 (192 x 264px)
+              </M.P>
+            </InputBox>
+            <div style={{ width: "70%", position: "relative", margin: "0 auto", display: "flex" }}>
+              <M.Button
+                onClick={handleClick}
+                disabled={
+                  !state.title.trim() ||
+                  !state.description.trim() ||
+                  !state.image ||
+                  state.image === Default_cover
+                }
+              >
+                작품 등록
+              </M.Button>
+            </div>
+          </M.InputWrapper>
+        </div>
         <div style={{ height: "200px" }}></div>
       </M.Wrapper>
     </>
