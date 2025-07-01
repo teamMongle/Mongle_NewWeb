@@ -23,12 +23,14 @@ const Header = styled.div`
     z-index: 10;
 `
 
-export default function NewPostHeader() {
+export default function NewPostHeader({ title }) {
 
 
     return (
-        <Header>
-            글 쓰기
+        <Header >
+            {/* 글 쓰기 */}
+            {title}
+
         </Header>
     );
 }

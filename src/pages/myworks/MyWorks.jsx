@@ -54,7 +54,7 @@ const MyWorksPage = ({ isLoggedIn }) => {
     setModalVisible(true);
     setOnConfirmCallback(() => onConfirmCallbackFn);
   };
-
+  
   const handleConfirm = () => {
     if (isConfirm && onConfirmCallback) onConfirmCallback();
     setModalVisible(false);
@@ -88,10 +88,6 @@ const MyWorksPage = ({ isLoggedIn }) => {
                 style={{ cursor: "pointer" }}
                 onClick={() => navigate(`/story/${work.id}`)}
               >
-                {/* <div 
-                  onClick={() => navigate(`story/${work.id}`)}
-                  style={{ position: "absolute", width: "400px", }}
-                > */}
                 <img
                   src={work.image}
                   alt={work.title}
@@ -116,6 +112,15 @@ const MyWorksPage = ({ isLoggedIn }) => {
                     <img src={like} style={{ width: "13px", height: "11px" }} alt="like" />{work.likes}
                     <img src={view} style={{ width: "16px", height: "17px" }} alt="view" />0
                   </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "8px",
+                      marginLeft: "auto",
+                      marginRight: "40px",
+                    }}
+                  >
                 </div>
                 <div
                   style={{
@@ -126,7 +131,6 @@ const MyWorksPage = ({ isLoggedIn }) => {
                     marginRight: "40px",
                   }}
                 >
-                  {/* </div> */}
                   <button
                     style={{
                       width: "92px",

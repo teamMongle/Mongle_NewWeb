@@ -4,8 +4,8 @@ import * as M from "./HeaderStyle";
 
 const Header = ({ isLoggedIn, onLoginClick }) => {
   const location = useLocation();
-  const getActiveLinkStyle = (path) => {
-    return location.pathname === path
+  const getActiveLinkStyle = (...paths) => {
+    return paths.some(path => location.pathname.startsWith(path))
       ? { fontWeight: 700, color: "#121212" }
       : {};
   };
@@ -32,7 +32,7 @@ const Header = ({ isLoggedIn, onLoginClick }) => {
         </M.Navigation>
 
         {isLoggedIn ? (
-          <M.NavLink href="/mypage" style={getActiveLinkStyle("/mypage")}>
+          <M.NavLink href="/mypage" style={getActiveLinkStyle("/mypage", "/draft", "/mypage/myworks")}>
             마이페이지
           </M.NavLink>
         ) : (

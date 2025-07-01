@@ -95,7 +95,6 @@ export default function Login({ setIsLoggedIn }) {
 
     try {
       const response = await fetch("http://3.39.231.73:5000/login", {
-      // const response = await axios.post("http://3.39.231.73:5000/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -114,7 +113,7 @@ export default function Login({ setIsLoggedIn }) {
         localStorage.setItem("token", data.access_token);
         navigate("/main");
       } else {
-        const errorData = await response.text(); // 혹은 .json() 형식에 따라
+        const errorData = await response.text();
         console.error("로그인 실패:", errorData);
         console.error("에러 상태 코드:", response.status);
         // alert("로그인 중 오류가 발생했습니다. 다시 시도해 주세요.");
