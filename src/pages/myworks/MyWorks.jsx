@@ -64,7 +64,6 @@ const MyWorksPage = ({ isLoggedIn }) => {
     setModalVisible(false);
   };
 
-
   return (
     <>
       {modalVisible && (
@@ -189,14 +188,14 @@ const MyWorksPage = ({ isLoggedIn }) => {
                         axios.delete(`http://3.39.231.73:5000/notes/${work.id}`, {
                           headers: { Authorization: `Bearer ${token}` }
                         })
-                        .then(() => {
-                          showAlert("삭제 성공");
-                          setMyWorks(prev => prev.filter(item => item.id !== work.id));
-                        })
-                        .catch(err => {
-                          console.error("삭제 실패:", err);
-                          showAlert("삭제 실패");
-                        });
+                          .then(() => {
+                            showAlert("삭제 성공");
+                            setMyWorks(prev => prev.filter(item => item.id !== work.id));
+                          })
+                          .catch(err => {
+                            console.error("삭제 실패:", err);
+                            showAlert("삭제 실패");
+                          });
                       });
                     }}
                   >
