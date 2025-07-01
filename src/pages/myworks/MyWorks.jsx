@@ -26,12 +26,10 @@ const MyWorksPage = ({ isLoggedIn }) => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
-        );
+        });
         console.log(response.data.myWorks);
-        setMyWorks(response.data.myWorks)
-        setUser(response.data.profile)
-
+        setMyWorks(response.data.myWorks);
+        setUser(response.data.profile);
       } catch (error) {
         console.error("내 작품 가져오기 실패:", error);
       }
@@ -100,7 +98,7 @@ const MyWorksPage = ({ isLoggedIn }) => {
                   style={{
                     width: "840px",
                     borderTop: "1px solid #E5E7EB",
-                    paddingBottom: ""
+                    paddingBottom: "",
                   }}
                 />
               )}
@@ -115,7 +113,7 @@ const MyWorksPage = ({ isLoggedIn }) => {
                     width: "100px",
                     height: "150px",
                     objectFit: "cover",
-                    marginRight: "10px"
+                    marginRight: "10px",
                   }}
                 />
                 <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", width: "100%" }}>
@@ -202,7 +200,6 @@ const MyWorksPage = ({ isLoggedIn }) => {
             </div>
           ))
         ) : (
-          // <p>작성한 작품이 없습니다.</p>
           <></>
         )}
       </div>
