@@ -3,8 +3,8 @@ import SideBar from "../../components/sidebar/SideBar";
 import Header from "../../components/layout/header/Header";
 import axios from "axios";
 import * as M from "./MyWorksStyle";
-import like from "../../assets/images/like.png"
-import view from "../../assets/images/view.png"
+import like from "../../assets/images/like.png";
+import view from "../../assets/images/view.png";
 import { useNavigate } from "react-router-dom";
 import Modal from "../../components/common/Modal";
 
@@ -22,8 +22,7 @@ const MyWorksPage = ({ isLoggedIn }) => {
 
     const fetchMyWorks = async () => {
       try {
-        const response = await axios.get(
-          "http://3.39.231.73:5000/users/me", {
+        const response = await axios.get("http://3.39.231.73:5000/users/me", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -54,7 +53,7 @@ const MyWorksPage = ({ isLoggedIn }) => {
     setModalVisible(true);
     setOnConfirmCallback(() => onConfirmCallbackFn);
   };
-  
+
   const handleConfirm = () => {
     if (isConfirm && onConfirmCallback) onConfirmCallback();
     setModalVisible(false);
@@ -77,12 +76,33 @@ const MyWorksPage = ({ isLoggedIn }) => {
       )}
       <Header isLoggedIn={isLoggedIn} />
       <SideBar style={{ position: "fixed" }} />
-      <div style={{ position: "absolute", flexWrap: "wrap", gap: "20px", padding: "20px", marginTop: "100px", marginLeft: "400px" }}>
+      <div
+        style={{
+          position: "absolute",
+          flexWrap: "wrap",
+          gap: "20px",
+          padding: "20px",
+          marginTop: "100px",
+          marginLeft: "400px",
+        }}
+      >
         {Array.isArray(myWorks) && myWorks.length > 0 ? (
           myWorks.map((work, index) => (
-            <div key={work.id} style={{ width: "840px", borderBottom: "1px solid #E5E7EB", }}>
+            <div
+              key={work.id}
+              style={{
+                width: "840px",
+                borderBottom: "1px solid #E5E7EB",
+              }}
+            >
               {index === 0 && (
-                <div style={{ width: "840px", borderTop: "1px solid #E5E7EB", paddingBottom: "" }} />
+                <div
+                  style={{
+                    width: "840px",
+                    borderTop: "1px solid #E5E7EB",
+                    paddingBottom: ""
+                  }}
+                />
               )}
               <M.MYWORKS
                 style={{ cursor: "pointer" }}
@@ -98,109 +118,85 @@ const MyWorksPage = ({ isLoggedIn }) => {
                     marginRight: "10px"
                   }}
                 />
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <p style={{ margin: "0", color: "#9CA3AF", fontSize: "12px" }}>{work.category}</p>
-                  <h3 style={{ margin: "0", fontSize: "16px" }}>{work.title}</h3>
-                  <p style={{ margin: "0", fontSize: "14px", color: "#9CA3AF" }}>
-                    {/* {new Date(work.createdAt)
-                      .toISOString()
-                      .slice(0, 10)
-                      .replace(/-/g, ".")} */}
-                    {new Date(work.created_at).toISOString().slice(0, 10).replace(/-/g, ".")}
-                  </p>
-                  <div style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "60px" }}>
-                    <img src={like} style={{ width: "13px", height: "11px" }} alt="like" />{work.likes}
-                    <img src={view} style={{ width: "16px", height: "17px" }} alt="view" />0
+                <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", width: "100%" }}>
+                  <div style={{ display: "flex", flexDirection: "column" }}>
+                    <p style={{ margin: "0", color: "#9CA3AF", fontSize: "12px" }}>{work.category}</p>
+                    <h3 style={{ margin: "0", fontSize: "16px" }}>{work.title}</h3>
+                    <p style={{ margin: "0", fontSize: "14px", color: "#9CA3AF" }}>
+                      {new Date(work.created_at).toISOString().slice(0, 10).replace(/-/g, ".")}
+                    </p>
+                    <div style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "60px" }}>
+                      <img src={like} style={{ width: "13px", height: "11px" }} alt="like" />
+                      {work.likes}
+                      <img src={view} style={{ width: "16px", height: "17px" }} alt="view" />
+                      0
+                    </div>
                   </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "8px",
-                      marginLeft: "auto",
-                      marginRight: "40px",
-                    }}
-                  >
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "8px",
-                    marginLeft: "auto",
-                    marginRight: "40px",
-                  }}
-                >
-                  <button
-                    style={{
-                      width: "92px",
-                      height: "37px",
-                      padding: "5px",
-                      backgroundColor: "#F3F4F6",
-                      color: "#6B7280",
-                      border: "none",
-                      borderRadius: "12px",
-                      cursor: "pointer",
-                    }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      const token = localStorage.getItem("token");
-                      axios.get(`http://3.39.231.73:5000/notes/${work.id}`, {
-                        headers: { Authorization: `Bearer ${token}` }
-                      }).then(res => {
-                        // Assuming posts page can accept initData via navigation state
-                        window.location.href = `/posts/${work.id}`;
-                      }).catch(err => {
-                        console.error("수정 데이터 불러오기 실패:", err);
-                        alert("수정 페이지로 이동 실패");
-                      });
-                    }}
-                  >
-                    작품 수정
-                  </button>
-                  <button
-                    style={{
-                      width: "92px",
-                      height: "37px",
-                      padding: "5px",
-                      backgroundColor: "#F3F4F6",
-                      color: "#6B7280",
-                      border: "none",
-                      borderRadius: "12px",
-                      cursor: "pointer",
-                    }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      // if (showConfirm("정말 삭제하시겠습니까?")) {
-                      //   const token = localStorage.getItem("token");
-                      //   axios.delete(`http://3.39.231.73:5000/notes/${work.id}`, {
-                      //     headers: { Authorization: `Bearer ${token}` }
-                      //   }).then(() => {
-                      //     alert("삭제 성공");
-                      //     window.location.reload();
-                      //   }).catch(err => {
-                      //     console.error("삭제 실패:", err);
-                      //     alert("삭제 실패");
-                      //   });
-                      // }
-                      showConfirm("정말 삭제하시겠습니까?", () => {
+                  <div style={{ display: "flex", flexDirection: "column", gap: "8px", alignItems: "flex-end" }}>
+                    <button
+                      style={{
+                        width: "92px",
+                        height: "37px",
+                        padding: "5px",
+                        backgroundColor: "#F3F4F6",
+                        color: "#6B7280",
+                        border: "none",
+                        borderRadius: "12px",
+                        cursor: "pointer",
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
                         const token = localStorage.getItem("token");
-                        axios.delete(`http://3.39.231.73:5000/notes/${work.id}`, {
-                          headers: { Authorization: `Bearer ${token}` }
-                        })
-                          .then(() => {
-                            showAlert("삭제 성공");
-                            setMyWorks(prev => prev.filter(item => item.id !== work.id));
+                        axios
+                          .get(`http://3.39.231.73:5000/notes/${work.id}`, {
+                            headers: {
+                              Authorization: `Bearer ${token}`,
+                            },
                           })
-                          .catch(err => {
-                            console.error("삭제 실패:", err);
-                            showAlert("삭제 실패");
+                          .then((res) => {
+                            window.location.href = `/posts/${work.id}`;
+                          })
+                          .catch((err) => {
+                            console.error("수정 데이터 불러오기 실패:", err);
+                            showAlert("수정 페이지로 이동 실패");
                           });
-                      });
-                    }}
-                  >
-                    작품 삭제
-                  </button>
+                      }}
+                    >
+                      작품 수정
+                    </button>
+                    <button
+                      style={{
+                        width: "92px",
+                        height: "37px",
+                        padding: "5px",
+                        backgroundColor: "#F3F4F6",
+                        color: "#6B7280",
+                        border: "none",
+                        borderRadius: "12px",
+                        cursor: "pointer",
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        showConfirm("정말 삭제하시겠습니까?", () => {
+                          const token = localStorage.getItem("token");
+                          axios
+                            .delete(`http://3.39.231.73:5000/notes/${work.id}`, {
+                              headers: { Authorization: `Bearer ${token}` },
+                            })
+                            .then(() => {
+                              showAlert("삭제 성공");
+                              setMyWorks((prev) => prev.filter((item) => item.id !== work.id));
+                            })
+                            .catch((err) => {
+                              console.error("삭제 실패:", err);
+                              showAlert("삭제 실패");
+                            });
+                        });
+                      }}
+                    >
+                      작품 삭제
+                    </button>
+                  </div>
                 </div>
               </M.MYWORKS>
             </div>
