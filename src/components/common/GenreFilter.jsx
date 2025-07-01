@@ -37,11 +37,13 @@ const GenreFilter = ({ title, selected, onChange, onSelect }) => {
       : ["로맨스", "액션", "SF", "판타지", "공포", "문학"];
 
   const defaultSelected = genres[0];
-  const [selectedGenre, setSelectedGenre] = useState(defaultSelected);
+  const [selectedGenre, setSelectedGenre] = useState(selected || defaultSelected);
 
-  useEffect(() => {
-    onSelect?.(defaultSelected);
-  }, []);
+useEffect(() => {
+  if (selected) {
+    setSelectedGenre(selected);
+  }
+}, [selected]);
 
   const handleGenreClick = (genre) => {
     const newGenre = genre === selectedGenre ? null : genre;

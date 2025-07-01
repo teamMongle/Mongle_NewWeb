@@ -116,62 +116,21 @@ const MyWorksPage = ({ isLoggedIn }) => {
                     marginRight: "10px",
                   }}
                 />
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <p
-                    style={{
-                      margin: "0",
-                      color: "#9CA3AF",
-                      fontSize: "12px",
-                    }}
-                  >
-                    {work.category}
-                  </p>
-                  <h3 style={{ margin: "0", fontSize: "16px" }}>
-                    {work.title}
-                  </h3>
-                  <p
-                    style={{
-                      margin: "0",
-                      fontSize: "14px",
-                      color: "#9CA3AF",
-                    }}
-                  >
-                    {new Date(work.created_at)
-                      .toISOString()
-                      .slice(0, 10)
-                      .replace(/-/g, ".")}
-                  </p>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "10px",
-                      marginTop: "60px",
-                    }}
-                  >
-                    <img
-                      src={like}
-                      style={{ width: "13px", height: "11px" }}
-                      alt="like"
-                    />
-                    {work.likes}
-                    <img
-                      src={view}
-                      style={{ width: "16px", height: "17px" }}
-                      alt="view"
-                    />
-                    0
+                <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", width: "100%" }}>
+                  <div style={{ display: "flex", flexDirection: "column" }}>
+                    <p style={{ margin: "0", color: "#9CA3AF", fontSize: "12px" }}>{work.category}</p>
+                    <h3 style={{ margin: "0", fontSize: "16px" }}>{work.title}</h3>
+                    <p style={{ margin: "0", fontSize: "14px", color: "#9CA3AF" }}>
+                      {new Date(work.created_at).toISOString().slice(0, 10).replace(/-/g, ".")}
+                    </p>
+                    <div style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "60px" }}>
+                      <img src={like} style={{ width: "13px", height: "11px" }} alt="like" />
+                      {work.likes}
+                      <img src={view} style={{ width: "16px", height: "17px" }} alt="view" />
+                      0
+                    </div>
                   </div>
-
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "8px",
-                      marginLeft: "auto",
-                      marginRight: "40px",
-                    }}
-                  >
+                  <div style={{ display: "flex", flexDirection: "column", gap: "8px", alignItems: "flex-end" }}>
                     <button
                       style={{
                         width: "92px",
@@ -197,7 +156,7 @@ const MyWorksPage = ({ isLoggedIn }) => {
                           })
                           .catch((err) => {
                             console.error("수정 데이터 불러오기 실패:", err);
-                            alert("수정 페이지로 이동 실패");
+                            showAlert("수정 페이지로 이동 실패");
                           });
                       }}
                     >
@@ -216,32 +175,15 @@ const MyWorksPage = ({ isLoggedIn }) => {
                       }}
                       onClick={(e) => {
                         e.stopPropagation();
-                        // if (showConfirm("정말 삭제하시겠습니까?")) {
-                        //   const token = localStorage.getItem("token");
-                        //   axios.delete(`http://3.39.231.73:5000/notes/${work.id}`, {
-                        //     headers: { Authorization: `Bearer ${token}` }
-                        //   }).then(() => {
-                        //     alert("삭제 성공");
-                        //     window.location.reload();
-                        //   }).catch(err => {
-                        //     console.error("삭제 실패:", err);
-                        //     alert("삭제 실패");
-                        //   });
-                        // }
                         showConfirm("정말 삭제하시겠습니까?", () => {
                           const token = localStorage.getItem("token");
                           axios
-                            .delete(
-                              `http://3.39.231.73:5000/notes/${work.id}`,
-                              {
-                                headers: { Authorization: `Bearer ${token}` },
-                              }
-                            )
+                            .delete(`http://3.39.231.73:5000/notes/${work.id}`, {
+                              headers: { Authorization: `Bearer ${token}` },
+                            })
                             .then(() => {
                               showAlert("삭제 성공");
-                              setMyWorks((prev) =>
-                                prev.filter((item) => item.id !== work.id)
-                              );
+                              setMyWorks((prev) => prev.filter((item) => item.id !== work.id));
                             })
                             .catch((err) => {
                               console.error("삭제 실패:", err);

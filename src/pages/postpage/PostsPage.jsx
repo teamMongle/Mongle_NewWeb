@@ -33,6 +33,8 @@ const PostsPage = ({ isLoggedIn, initData }) => {
     author_name: ""
   });
 
+  const [isEditMode, setIsEditMode] = useState(false);
+
   const showAlert = (msg) => {
     setModalMessage(msg);
     setIsConfirm(false);
@@ -89,6 +91,7 @@ const PostsPage = ({ isLoggedIn, initData }) => {
 
     // '수정' 모드일 때만 GET 실행 (주소 끝에 id가 붙어있을 때)
     if (window.location.pathname.includes("/posts/")) {
+      setIsEditMode(true);
       fetchPostData();
     }
   }, []);
@@ -247,7 +250,7 @@ const PostsPage = ({ isLoggedIn, initData }) => {
               작품 등록
             </M.PostHeader>
             <InputBox isFirst={true}>
-              <GenreFilter title={"카테고리 선택"} onSelect={handleGenreSelect} />
+              <GenreFilter title={"카테고리 선택"} onSelect={handleGenreSelect} selected={state.category} />
             </InputBox>
             <InputBox isFirst={false}>
               <M.P>작품명</M.P>
@@ -320,7 +323,7 @@ const PostsPage = ({ isLoggedIn, initData }) => {
                   state.image === Default_cover
                 }
               >
-                작품 등록
+                {isEditMode ? "작품 수정" : "작품 등록"}
               </M.Button>
             </div>
           </M.InputWrapper>
