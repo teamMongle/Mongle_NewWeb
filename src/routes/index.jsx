@@ -47,7 +47,7 @@ const AppRoutes = () => {
       <Route path="/posts/:postId?" element={<PostsPage isLoggedIn={isLoggedIn} />} />
       <Route path="/mypage" element={<MyPage isLoggedIn={isLoggedIn} />} />
       <Route path="/mypage/myworks" element={<MyWorksPage isLoggedIn={isLoggedIn} />} />
-      <Route path="/mypage/likedworks" element={<LikedWorksPage isLoggedIn={isLoggedIn} />} />
+      {/* <Route path="/mypage/likedworks" element={<LikedWorksPage isLoggedIn={isLoggedIn} />} /> */}
       <Route path="/draft" element={<DraftPost isLoggedIn={isLoggedIn} />} />
       <Route path="/add-episode/:note_id" element={<AddEpisode isLoggedIn={isLoggedIn} />} />
     </Routes>

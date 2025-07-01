@@ -214,7 +214,7 @@ const PostsPage = ({ isLoggedIn, initData }) => {
     }
     // setStep(2);
     // navigate("/add-episode");
-    // navigate("/story/:note_id"); // 서버에 보내고.. 다시 받아서 id를 추출,, -> 이동
+    // navigate("/story/:note_id");
 
     handleSubmit(e);
   };
