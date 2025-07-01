@@ -230,6 +230,15 @@ const PostsPage = ({ isLoggedIn, initData }) => {
 
   return (
     <>
+      {modalVisible && (
+        <Modal
+          message={modalMessage}
+          onConfirm={handleConfirm}
+          onCancel={handleCancel}
+          showCancel={isConfirm}
+          confirmLabel={isConfirm ? "확인" : "확인"}
+        />
+      )}
       <M.Wrapper>
         <Header isLoggedIn={isLoggedIn} />
         <div>
