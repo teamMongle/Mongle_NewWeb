@@ -11,16 +11,16 @@ const GenreList = styled.ul`
 `;
 
 const GenreItem = styled.li`
-  margin: 0;
+  margin: 0 10px 12px 0;
   padding: 8px 24px;
   border-radius: 28px;
   cursor: pointer;
-  background-color: ${(props) => (props.isSelected ? "#121212" : "#f8f9fa")};
-  color: ${(props) => (props.isSelected ? "#fff" : "#000")};
+  background-color: ${(props) => (props.$isSelected ? "#121212" : "#f8f9fa")};
+  color: ${(props) => (props.$isSelected ? "#fff" : "#000")};
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: ${(props) => (props.isSelected ? "#121212" : "#E5E7EB")};
+    background-color: ${(props) => (props.$isSelected ? "#121212" : "#E5E7EB")};
   }
 `;
 
@@ -30,13 +30,24 @@ const Title = styled.h3`
   margin: 0 0 16px 5px;
 `;
 
-const GenreFilter = ({ title = "장르", selected, onChange }) => {
+const GenreFilter = ({ title, selected, onChange, onSelect }) => {
   const genres =
     title === "연령별 BEST 9"
       ? ["10대", "20대", "30대", "40대"]
       : ["로맨스", "액션", "SF", "판타지", "공포", "문학"];
 
+  const defaultSelected = genres[0];
+  const [selectedGenre, setSelectedGenre] = useState(defaultSelected);
+
+  useEffect(() => {
+    onSelect?.(defaultSelected);
+  }, []);
+
   const handleGenreClick = (genre) => {
+    const newGenre = genre === selectedGenre ? null : genre;
+    setSelectedGenre(newGenre);
+    onSelect?.(newGenre);
+
     if (genre !== selected) {
       onChange?.(genre);
     }
@@ -46,10 +57,10 @@ const GenreFilter = ({ title = "장르", selected, onChange }) => {
     <div>
       <Title>{title}</Title>
       <GenreList>
-        {genres.map((genre) => (
+        {genres.map((genre, index) => (
           <GenreItem
-            key={genre}
-            isSelected={genre === selected}
+            key={index}
+            $isSelected={genre === selectedGenre}
             onClick={() => handleGenreClick(genre)}
           >
             {genre}

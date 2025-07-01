@@ -29,7 +29,7 @@ const MyWorksPage = ({ isLoggedIn }) => {
           },
         }
         );
-        console.log(response.data);
+        console.log(response.data.myWorks);
         setMyWorks(response.data.myWorks)
         setUser(response.data.profile)
 
@@ -81,6 +81,10 @@ const MyWorksPage = ({ isLoggedIn }) => {
                 // onClick={() => navigate(`/story/${work.id}`)}
                 style={{ cursor: "pointer" }}
               >
+                {/* <div 
+                  onClick={() => navigate(`story/${work.id}`)}
+                  style={{ position: "absolute", width: "400px", }}
+                > */}
                 <img
                   src={work.image}
                   alt={work.title}
@@ -92,9 +96,15 @@ const MyWorksPage = ({ isLoggedIn }) => {
                   }}
                 />
                 <div style={{ display: "flex", flexDirection: "column" }}>
-                  <p style={{ margin: "0", color: "#9CA3AF", fontSize: "12px" }}>로맨스</p>
+                  <p style={{ margin: "0", color: "#9CA3AF", fontSize: "12px" }}>{work.category}</p>
                   <h3 style={{ margin: "0", fontSize: "16px" }}>{work.title}</h3>
-                  <p style={{ margin: "0", fontSize: "14px", color: "#9CA3AF" }}>2025.06.23</p>
+                  <p style={{ margin: "0", fontSize: "14px", color: "#9CA3AF" }}>
+                    {/* {new Date(work.createdAt)
+                      .toISOString()
+                      .slice(0, 10)
+                      .replace(/-/g, ".")} */}
+                    {new Date(work.created_at).toISOString().slice(0, 10).replace(/-/g, ".")}
+                  </p>
                   <div style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "60px" }}>
                     <img src={like} style={{ width: "13px", height: "11px" }} alt="like" />{work.likes}
                     <img src={view} style={{ width: "16px", height: "17px" }} alt="view" />0
@@ -109,6 +119,7 @@ const MyWorksPage = ({ isLoggedIn }) => {
                     marginRight: "40px",
                   }}
                 >
+                  {/* </div> */}
                   <button
                     style={{
                       width: "92px",
