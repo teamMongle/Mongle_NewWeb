@@ -95,6 +95,7 @@ export default function Login({ setIsLoggedIn }) {
 
     try {
       const response = await fetch("http://3.39.231.73:5000/login", {
+      // const response = await axios.post("http://3.39.231.73:5000/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -150,6 +151,7 @@ export default function Login({ setIsLoggedIn }) {
           onConfirm={handleConfirm}
           onCancel={handleCancel}
           showCancel={isConfirm}
+          confirmLabel={isConfirm ? "확인" : "확인"}
         />
       )}
       <M.Content>

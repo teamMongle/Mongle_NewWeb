@@ -117,7 +117,8 @@ export default function Signup({ setIsLoggedIn }) {
         setModalMessage("회원가입 성공!");
         setModalVisible(true);
         setIsLoggedIn(true);
-        navigate("/main");
+        handleLogin(signupData.username, signupData.password);
+        // navigate("/main");
       } else {
         console.error("회원가입 실패 응답:", await response.text());
         // alert("회원가입 실패");
@@ -144,13 +145,53 @@ export default function Signup({ setIsLoggedIn }) {
         }
       } else if (step === 2) {
         if (!signupData.name || !signupData.age) {
-          alert("이름과 나이를 입력해 주세요.");
+          showAlert("이름과 나이를 입력해 주세요.");
           setModalMessage("이름과 나이를 입력해 주세요.");
           setModalVisible(true);
         } else {
           handleSubmit();
         }
       }
+    }
+  };
+
+  const handleLogin = async (username, password) => {
+    try {
+      const response = await fetch("http://3.39.231.73:5000/login", {
+      // const response = await axios.post("http://3.39.231.73:5000/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          username: username,
+          password: password,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("로그인 성공:", data);
+        setIsLoggedIn(true);  // props로 받은 함수
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("token", data.access_token);
+        navigate("/main");
+      } else {
+        const errorData = await response.text(); // 혹은 .json() 형식에 따라
+        console.error("로그인 실패:", errorData);
+        console.error("에러 상태 코드:", response.status);
+        // alert("로그인 중 오류가 발생했습니다. 다시 시도해 주세요.");
+        if (response.status === 401) {
+          // alert("비밀번호가 틀렸습니다. 다시 확인해 주세요.");
+          showAlert("비밀번호가 틀렸습니다. 다시 확인해 주세요.");
+        } else {
+          // alert("로그인 중 오류가 발생했습니다. 다시 시도해 주세요.");
+          showAlert("로그인에 실패했습니다!");
+        }
+      }
+    } catch (error) {
+      console.error("에러 발생:", error.message);
+      alert("네트워크 오류입니다. 서버를 확인해 주세요.");
     }
   };
 
@@ -162,6 +203,7 @@ export default function Signup({ setIsLoggedIn }) {
           onConfirm={handleConfirm}
           onCancel={handleCancel}
           showCancel={isConfirm}
+                    confirmLabel="확인"
         />
       )}
       <M.Content>

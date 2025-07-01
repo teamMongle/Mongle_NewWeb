@@ -41,6 +41,13 @@ const MyWorksPage = ({ isLoggedIn }) => {
     fetchMyWorks();
   }, []);
 
+  const showAlert = (msg) => {
+    setModalMessage(msg);
+    setIsConfirm(false);
+    setModalVisible(true);
+    setOnConfirmCallback(null);
+  };
+
   const showConfirm = (msg, onConfirmCallbackFn) => {
     setModalMessage(msg);
     setIsConfirm(true);
@@ -66,6 +73,7 @@ const MyWorksPage = ({ isLoggedIn }) => {
           onConfirm={handleConfirm}
           onCancel={handleCancel}
           showCancel={isConfirm}
+          confirmLabel={isConfirm ? "작품 삭제" : "확인"}
         />
       )}
       <Header isLoggedIn={isLoggedIn} />
@@ -78,8 +86,8 @@ const MyWorksPage = ({ isLoggedIn }) => {
                 <div style={{ width: "840px", borderTop: "1px solid #E5E7EB", paddingBottom: "" }} />
               )}
               <M.MYWORKS
-                // onClick={() => navigate(`/story/${work.id}`)}
                 style={{ cursor: "pointer" }}
+                onClick={() => navigate(`/story/${work.id}`)}
               >
                 {/* <div 
                   onClick={() => navigate(`story/${work.id}`)}
@@ -131,7 +139,8 @@ const MyWorksPage = ({ isLoggedIn }) => {
                       borderRadius: "12px",
                       cursor: "pointer",
                     }}
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.stopPropagation();
                       const token = localStorage.getItem("token");
                       axios.get(`http://3.39.231.73:5000/notes/${work.id}`, {
                         headers: { Authorization: `Bearer ${token}` }
@@ -157,19 +166,34 @@ const MyWorksPage = ({ isLoggedIn }) => {
                       borderRadius: "12px",
                       cursor: "pointer",
                     }}
-                    onClick={() => {
-                      if (showConfirm("정말 삭제하시겠습니까?")) {
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      // if (showConfirm("정말 삭제하시겠습니까?")) {
+                      //   const token = localStorage.getItem("token");
+                      //   axios.delete(`http://3.39.231.73:5000/notes/${work.id}`, {
+                      //     headers: { Authorization: `Bearer ${token}` }
+                      //   }).then(() => {
+                      //     alert("삭제 성공");
+                      //     window.location.reload();
+                      //   }).catch(err => {
+                      //     console.error("삭제 실패:", err);
+                      //     alert("삭제 실패");
+                      //   });
+                      // }
+                      showConfirm("정말 삭제하시겠습니까?", () => {
                         const token = localStorage.getItem("token");
                         axios.delete(`http://3.39.231.73:5000/notes/${work.id}`, {
                           headers: { Authorization: `Bearer ${token}` }
-                        }).then(() => {
-                          alert("삭제 성공");
-                          window.location.reload();
-                        }).catch(err => {
+                        })
+                        .then(() => {
+                          showAlert("삭제 성공");
+                          setMyWorks(prev => prev.filter(item => item.id !== work.id));
+                        })
+                        .catch(err => {
                           console.error("삭제 실패:", err);
-                          alert("삭제 실패");
+                          showAlert("삭제 실패");
                         });
-                      }
+                      });
                     }}
                   >
                     작품 삭제

@@ -8,6 +8,7 @@ import * as M from "./PostsPageStyle"
 import styled from "styled-components";
 import PhotoAdd from "../../assets/images/AddPhoto.svg";
 import Default_cover from "../../assets/images/default-cover.png"
+import Modal from "../../components/common/Modal";
 
 const InputBox = styled(Box)`
     display: flex;
@@ -20,7 +21,9 @@ const InputBox = styled(Box)`
 const PostsPage = ({ isLoggedIn, initData }) => {
   const navigate = useNavigate();
   const { postId } = useParams();
-
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [isConfirm, setIsConfirm] = useState(false);
   const [state, setState] = useState({
     title: "",
     content: "",
@@ -29,6 +32,30 @@ const PostsPage = ({ isLoggedIn, initData }) => {
     description: "",
     author_name: ""
   });
+
+  const showAlert = (msg) => {
+    setModalMessage(msg);
+    setIsConfirm(false);
+    setModalVisible(true);
+  };
+
+  const showConfirm = (msg, onConfirmCallback) => {
+    setModalMessage(msg);
+    setIsConfirm(true);
+    setModalVisible(true);
+    setOnConfirmCallback(() => onConfirmCallback); // callback 저장
+  };
+
+  const [onConfirmCallback, setOnConfirmCallback] = useState(() => () => { });
+
+  const handleConfirm = () => {
+    if (isConfirm && onConfirmCallback) onConfirmCallback();
+    setModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setModalVisible(false);
+  };
 
   const [previewImage, setPreviewImage] = useState(Default_cover);
   const inputRef = useRef(null);
@@ -154,7 +181,7 @@ const PostsPage = ({ isLoggedIn, initData }) => {
             "Authorization": `Bearer ${token}`,
           },
         });
-        alert("작품이 수정되었습니다!");
+        showAlert("작품이 수정되었습니다!");
         navigate("/mypage/myworks");
       } else {
         // 새 글 작성 모드
@@ -163,7 +190,7 @@ const PostsPage = ({ isLoggedIn, initData }) => {
             "Authorization": `Bearer ${token}`,
           },
         });
-        alert("작품이 등록되었습니다!");
+        showAlert("작품이 등록되었습니다!");
         navigate("/main");
       }
     } catch (error) {
@@ -174,15 +201,15 @@ const PostsPage = ({ isLoggedIn, initData }) => {
   const handleClick = (e) => {
     e.preventDefault();
     if (!state.title.trim()) {
-      alert("작품명을 입력해 주세요.");
+      showAlert("작품명을 입력해 주세요.");
       return;
     }
     if (!state.description.trim()) {
-      alert("작품 소개를 입력해 주세요.");
+      showAlert("작품 소개를 입력해 주세요.");
       return;
     }
     if (!state.image || state.image === Default_cover) {
-      alert("메인 표지 이미지를 등록해 주세요.");
+      showAlert("메인 표지 이미지를 등록해 주세요.");
       return;
     }
     // setStep(2);
