@@ -3,6 +3,7 @@ import styled from "styled-components";
 import * as M from "./authStyle";
 import CheckIcon from "../../assets/images/Check.svg";
 import { useNavigate } from "react-router-dom";
+import Modal from "../../components/common/Modal";
 
 const InputWrapper = styled.div`
   position: relative;
@@ -50,6 +51,12 @@ const SelectBox = styled.select`
 export default function Signup({ setIsLoggedIn }) {
   const [step, setStep] = useState(1);
   const navigate = useNavigate();
+  const [isValidUsername, setIsValidUsername] = useState(false);
+  const [isValidPassword, setIsValidPassword] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [isConfirm, setIsConfirm] = useState(false);
+  const [onConfirmCallback, setOnConfirmCallback] = useState(() => () => { });
   const [signupData, setSignupData] = useState({
     username: "",
     password: "",
@@ -57,12 +64,24 @@ export default function Signup({ setIsLoggedIn }) {
     age: "",
   });
 
-  const [isValidUsername, setIsValidUsername] = useState(false);
-  const [isValidPassword, setIsValidPassword] = useState(false);
-
   const validateUsername = (username) => {
     const regex = /^[a-z0-9]{4,20}$/; // 4~20자 영문 소문자+숫자
     return regex.test(username);
+  };
+
+  const showAlert = (msg) => {
+    setModalMessage(msg);
+    setIsConfirm(false);
+    setModalVisible(true);
+  };
+
+  const handleConfirm = () => {
+    if (isConfirm && onConfirmCallback) onConfirmCallback();
+    setModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setModalVisible(false);
   };
 
   const validatePassword = (password) => {
@@ -85,7 +104,7 @@ export default function Signup({ setIsLoggedIn }) {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch("http://3.36.64.165:5000/register", {
+      const response = await fetch("http://3.39.231.73:5000/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -94,16 +113,23 @@ export default function Signup({ setIsLoggedIn }) {
       });
 
       if (response.ok) {
-        alert("회원가입 성공!");
+        // alert("회원가입 성공!");
+        setModalMessage("회원가입 성공!");
+        setModalVisible(true);
         setIsLoggedIn(true);
-        navigate("/main");
+        handleLogin(signupData.username, signupData.password);
+        // navigate("/main");
       } else {
-        alert("회원가입 실패");
         console.error("회원가입 실패 응답:", await response.text());
+        // alert("회원가입 실패");
+        setModalMessage("회원가입 실패");
+        setModalVisible(true);
       }
     } catch (error) {
       console.error("에러 발생:", error);
-      alert("서버와의 연결에 실패했습니다.");
+      // alert("서버와의 연결에 실패했습니다.");
+      setModalMessage("서버와의 연결에 실패했습니다.");
+      setModalVisible(true);
     }
   };
 
@@ -111,13 +137,17 @@ export default function Signup({ setIsLoggedIn }) {
     if (e.key === "Enter") {
       if (step === 1) {
         if (!isValidUsername || !isValidPassword) {
-          alert("아이디 또는 비밀번호 형식을 확인해 주세요.");
+          // alert("아이디 또는 비밀번호 형식을 확인해 주세요.");
+          setModalMessage("아이디 또는 비밀번호 형식을 확인해 주세요.");
+          setModalVisible(true);
         } else {
           setStep(2);
         }
       } else if (step === 2) {
         if (!signupData.name || !signupData.age) {
-          alert("이름과 나이를 입력해 주세요.");
+          showAlert("이름과 나이를 입력해 주세요.");
+          setModalMessage("이름과 나이를 입력해 주세요.");
+          setModalVisible(true);
         } else {
           handleSubmit();
         }
@@ -125,8 +155,57 @@ export default function Signup({ setIsLoggedIn }) {
     }
   };
 
+  const handleLogin = async (username, password) => {
+    try {
+      const response = await fetch("http://3.39.231.73:5000/login", {
+      // const response = await axios.post("http://3.39.231.73:5000/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          username: username,
+          password: password,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("로그인 성공:", data);
+        setIsLoggedIn(true);  // props로 받은 함수
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("token", data.access_token);
+        navigate("/main");
+      } else {
+        const errorData = await response.text(); // 혹은 .json() 형식에 따라
+        console.error("로그인 실패:", errorData);
+        console.error("에러 상태 코드:", response.status);
+        // alert("로그인 중 오류가 발생했습니다. 다시 시도해 주세요.");
+        if (response.status === 401) {
+          // alert("비밀번호가 틀렸습니다. 다시 확인해 주세요.");
+          showAlert("비밀번호가 틀렸습니다. 다시 확인해 주세요.");
+        } else {
+          // alert("로그인 중 오류가 발생했습니다. 다시 시도해 주세요.");
+          showAlert("로그인에 실패했습니다!");
+        }
+      }
+    } catch (error) {
+      console.error("에러 발생:", error.message);
+      alert("네트워크 오류입니다. 서버를 확인해 주세요.");
+    }
+  };
+
   return (
     <M.Container>
+      {modalVisible && (
+        <Modal
+          message={modalMessage}
+          onConfirm={handleConfirm}
+          onCancel={handleCancel}
+          showCancel={isConfirm}
+                    confirmLabel="확인"
+        />
+      )}
       <M.Content>
         {step === 1 ? (
           <>

@@ -29,7 +29,7 @@ const MyWorksPage = ({ isLoggedIn }) => {
           },
         }
         );
-        console.log(response.data);
+        console.log(response.data.myWorks);
         setMyWorks(response.data.myWorks)
         setUser(response.data.profile)
 
@@ -41,13 +41,20 @@ const MyWorksPage = ({ isLoggedIn }) => {
     fetchMyWorks();
   }, []);
 
+  const showAlert = (msg) => {
+    setModalMessage(msg);
+    setIsConfirm(false);
+    setModalVisible(true);
+    setOnConfirmCallback(null);
+  };
+
   const showConfirm = (msg, onConfirmCallbackFn) => {
     setModalMessage(msg);
     setIsConfirm(true);
     setModalVisible(true);
     setOnConfirmCallback(() => onConfirmCallbackFn);
   };
-
+  
   const handleConfirm = () => {
     if (isConfirm && onConfirmCallback) onConfirmCallback();
     setModalVisible(false);
@@ -66,6 +73,7 @@ const MyWorksPage = ({ isLoggedIn }) => {
           onConfirm={handleConfirm}
           onCancel={handleCancel}
           showCancel={isConfirm}
+          confirmLabel={isConfirm ? "작품 삭제" : "확인"}
         />
       )}
       <Header isLoggedIn={isLoggedIn} />
@@ -78,29 +86,32 @@ const MyWorksPage = ({ isLoggedIn }) => {
                 <div style={{ width: "840px", borderTop: "1px solid #E5E7EB", paddingBottom: "" }} />
               )}
               <M.MYWORKS
-                // onClick={() => navigate(`/story/${work.id}`)}
                 style={{ cursor: "pointer" }}
+                onClick={() => navigate(`/story/${work.id}`)}
               >
-                <div onClick={() => navigate(`story/${work.id}`)>
-
-                  <img
-                    src={work.image}
-                    alt={work.title}
-                    style={{
-                      width: "100px",
-                      height: "150px",
-                      objectFit: "cover",
-                      marginRight: "10px"
-                    }}
-                  />
-                  <div style={{ display: "flex", flexDirection: "column" }}>
-                    <p style={{ margin: "0", color: "#9CA3AF", fontSize: "12px" }}>로맨스</p>
-                    <h3 style={{ margin: "0", fontSize: "16px" }}>{work.title}</h3>
-                    <p style={{ margin: "0", fontSize: "14px", color: "#9CA3AF" }}>2025.06.23</p>
-                    <div style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "60px" }}>
-                      <img src={like} style={{ width: "13px", height: "11px" }} alt="like" />{work.likes}
-                      <img src={view} style={{ width: "16px", height: "17px" }} alt="view" />0
-                    </div>
+                <img
+                  src={work.image}
+                  alt={work.title}
+                  style={{
+                    width: "100px",
+                    height: "150px",
+                    objectFit: "cover",
+                    marginRight: "10px"
+                  }}
+                />
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  <p style={{ margin: "0", color: "#9CA3AF", fontSize: "12px" }}>{work.category}</p>
+                  <h3 style={{ margin: "0", fontSize: "16px" }}>{work.title}</h3>
+                  <p style={{ margin: "0", fontSize: "14px", color: "#9CA3AF" }}>
+                    {/* {new Date(work.createdAt)
+                      .toISOString()
+                      .slice(0, 10)
+                      .replace(/-/g, ".")} */}
+                    {new Date(work.created_at).toISOString().slice(0, 10).replace(/-/g, ".")}
+                  </p>
+                  <div style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "60px" }}>
+                    <img src={like} style={{ width: "13px", height: "11px" }} alt="like" />{work.likes}
+                    <img src={view} style={{ width: "16px", height: "17px" }} alt="view" />0
                   </div>
                   <div
                     style={{
@@ -112,6 +123,15 @@ const MyWorksPage = ({ isLoggedIn }) => {
                     }}
                   >
                 </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "8px",
+                    marginLeft: "auto",
+                    marginRight: "40px",
+                  }}
+                >
                   <button
                     style={{
                       width: "92px",
@@ -123,7 +143,8 @@ const MyWorksPage = ({ isLoggedIn }) => {
                       borderRadius: "12px",
                       cursor: "pointer",
                     }}
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.stopPropagation();
                       const token = localStorage.getItem("token");
                       axios.get(`http://3.39.231.73:5000/notes/${work.id}`, {
                         headers: { Authorization: `Bearer ${token}` }
@@ -149,19 +170,34 @@ const MyWorksPage = ({ isLoggedIn }) => {
                       borderRadius: "12px",
                       cursor: "pointer",
                     }}
-                    onClick={() => {
-                      if (showConfirm("정말 삭제하시겠습니까?")) {
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      // if (showConfirm("정말 삭제하시겠습니까?")) {
+                      //   const token = localStorage.getItem("token");
+                      //   axios.delete(`http://3.39.231.73:5000/notes/${work.id}`, {
+                      //     headers: { Authorization: `Bearer ${token}` }
+                      //   }).then(() => {
+                      //     alert("삭제 성공");
+                      //     window.location.reload();
+                      //   }).catch(err => {
+                      //     console.error("삭제 실패:", err);
+                      //     alert("삭제 실패");
+                      //   });
+                      // }
+                      showConfirm("정말 삭제하시겠습니까?", () => {
                         const token = localStorage.getItem("token");
                         axios.delete(`http://3.39.231.73:5000/notes/${work.id}`, {
                           headers: { Authorization: `Bearer ${token}` }
-                        }).then(() => {
-                          alert("삭제 성공");
-                          window.location.reload();
-                        }).catch(err => {
+                        })
+                        .then(() => {
+                          showAlert("삭제 성공");
+                          setMyWorks(prev => prev.filter(item => item.id !== work.id));
+                        })
+                        .catch(err => {
                           console.error("삭제 실패:", err);
-                          alert("삭제 실패");
+                          showAlert("삭제 실패");
                         });
-                      }
+                      });
                     }}
                   >
                     작품 삭제

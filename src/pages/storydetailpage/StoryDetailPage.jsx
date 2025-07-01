@@ -208,6 +208,17 @@ const StoryDetailPage = () => {
 
 
 
+        {/* {activeTab === "episodes" ? (
+          <M.EpisodeSection>
+            {episodes.length === 0 ? (
+              <>
+                <M.EmptyEpisodeMessage>
+                  에피소드가 아직 없습니다.
+                </M.EmptyEpisodeMessage>
+                <button onClick={() => navigate("/add-episode")}>add episode</button> */}
+
+
+
         {activeTab === "episodes" ? (
           <M.EpisodeSection>
             {episodes.length === 0 ? (
@@ -242,6 +253,7 @@ const StoryDetailPage = () => {
                   };
 
                   return (
+
                     <M.EpisodeItem key={ep.episodeId}>
                       {/* 
                       
@@ -249,7 +261,6 @@ const StoryDetailPage = () => {
                       <button onClick={() => navigate(`/add-episode/${note.id}`)}>
                         add episode
                       </button>
-
                       */}
                       <Link
                         to={`/notes/${note_id}/episodes/${ep.episodeId}`}

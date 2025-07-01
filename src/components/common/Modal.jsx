@@ -59,7 +59,7 @@ const Button = styled.button`
   }
 `;
 
-const Modal = ({ message, onConfirm, onCancel, showCancel = false }) => {
+const Modal = ({ message, onConfirm, onCancel, showCancel = false, confirmLabel }) => {
   return (
     <ModalBackground>
       <ModalContainer>
@@ -68,7 +68,7 @@ const Modal = ({ message, onConfirm, onCancel, showCancel = false }) => {
           {showCancel && (
             <Button cancel onClick={onCancel}>취소</Button>
           )}
-          <Button onClick={onConfirm}>작품 삭제</Button>
+          <Button onClick={onConfirm}>{confirmLabel}</Button>
         </ButtonGroup>
       </ModalContainer>
     </ModalBackground>

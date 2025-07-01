@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import MongleIcon from "../../assets/images/mongleIcon.svg";
 import * as M from "./authStyle";
+import axios from "axios";
 import Modal from "../../components/common/Modal";
 
 const InputWrapper = styled.div`
@@ -37,7 +38,9 @@ const SignupButton = styled.button`
 
 export default function Login({ setIsLoggedIn }) {
   const navigate = useNavigate();
-
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [isConfirm, setIsConfirm] = useState(false);
   const [loginData, setLoginData] = useState({
     username: "",
     password: "",
@@ -113,9 +116,12 @@ export default function Login({ setIsLoggedIn }) {
         const errorData = await response.text();
         console.error("로그인 실패:", errorData);
         console.error("에러 상태 코드:", response.status);
+        // alert("로그인 중 오류가 발생했습니다. 다시 시도해 주세요.");
         if (response.status === 401) {
+          // alert("비밀번호가 틀렸습니다. 다시 확인해 주세요.");
           showAlert("비밀번호가 틀렸습니다. 다시 확인해 주세요.");
         } else {
+          // alert("로그인 중 오류가 발생했습니다. 다시 시도해 주세요.");
           showAlert("로그인에 실패했습니다!");
         }
       }
@@ -144,6 +150,7 @@ export default function Login({ setIsLoggedIn }) {
           onConfirm={handleConfirm}
           onCancel={handleCancel}
           showCancel={isConfirm}
+          confirmLabel={isConfirm ? "확인" : "확인"}
         />
       )}
       <M.Content>
